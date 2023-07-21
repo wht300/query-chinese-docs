@@ -1,6 +1,6 @@
 ---
 id: important-defaults
-title: Important Defaults
+title: 重要默认值（Important Defaults）
 ref: docs/react/guides/important-defaults.md
 ---
 

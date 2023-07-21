@@ -1,6 +1,6 @@
 ---
 id: disabling-queries
-title: Disabling/Pausing Queries
+title: Disabling/Pausing Queries（禁用/暂停查询）
 ref: docs/react/guides/disabling-queries.md
 ---
 
@@ -19,8 +19,8 @@ const { isInitialLoading, isError, data, error, refetch, isFetching } =
 </script>
 
 <template>
-  <button @click="refetch">Fetch Todos</button>
-  <span v-if="isIdle">Not ready...</span>
+  <button @click="refetch">获取待办事项</button>
+  <span v-if="isIdle">尚未准备好...</span>
   <span v-else-if="isError">Error: {{ error.message }}</span>
   <div v-else-if="data">
     <span v-if="isFetching">Fetching...</span>
@@ -44,12 +44,13 @@ const { data } = useQuery({
   queryKey: ['todos', filter],
   queryFn: () => fetchTodos(filter),
   // ⬇️ disabled as long as the filter is empty
+  // ⬇️ 仅当 filter 不为空时禁用
   enabled: isEnabled,
 })
 </script>
 
 <template>
-  <span v-if="data">Filter was set and data is here!</span>
+  <span v-if="data">已设置过滤器并且数据已加载！</span>
 </template>
 ```
 

@@ -1,6 +1,6 @@
 ---
 id: mutations
-title: Mutations
+title: 突变-Mutations
 ref: docs/react/guides/mutations.md
 ---
 
@@ -69,6 +69,7 @@ const client = new QueryClient({
 })
 
 // we need a default mutation function so that paused mutations can resume after a page reload
+// 我们需要一个默认的mutation函数，以便暂停的mutation可以在页面重新加载后恢复
 queryClient.setMutationDefaults({
   mutationKey: ['todos'],
   mutationFn: ({ id, data }) => {

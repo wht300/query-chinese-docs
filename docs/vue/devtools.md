@@ -11,3 +11,4 @@ The only thing you need to do is to install the official **[Vue Devtools](https:
 
 Vue Query will seamlessly integrate with the official devtools, adding custom inspector and timeline events.
 Devtool code will be treeshaken from production bundles by default.
+

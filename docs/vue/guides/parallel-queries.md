@@ -1,6 +1,6 @@
 ---
 id: parallel-queries
-title: Parallel Queries
+title: 并行查询 - Parallel Queries
 ref: docs/react/guides/parallel-queries.md
 ---
 
@@ -9,6 +9,7 @@ ref: docs/react/guides/parallel-queries.md
 ```vue
 <script setup lang="ts">
 // The following queries will execute in parallel
+// 下面的查询将并行执行
 const usersQuery = useQuery({ queryKey: ['users'], queryFn: fetchUsers })
 const teamsQuery = useQuery({ queryKey: ['teams'], queryFn: fetchTeams })
 const projectsQuery = useQuery({

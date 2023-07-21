@@ -1,6 +1,6 @@
 ---
 id: query-cancellation
-title: Query Cancellation
+title: 取消查询 Query Cancellation
 ref: docs/react/guides/query-cancellation.md
 ---
 

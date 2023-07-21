@@ -1,6 +1,6 @@
 ---
 id: initial-query-data
-title: Initial Query Data
+title: 初始查询数据 - Initial Query Data
 ref: docs/react/guides/initial-query-data.md
 ---
 

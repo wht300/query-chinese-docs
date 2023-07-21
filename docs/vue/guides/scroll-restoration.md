@@ -1,5 +1,5 @@
 ---
 id: scroll-restoration
-title: Scroll Restoration
+title: 滚动恢复 Scroll Restoration
 ref: docs/react/guides/scroll-restoration.md
 ---

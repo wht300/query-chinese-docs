@@ -1,6 +1,6 @@
 ---
 id: background-fetching-indicators
-title: Background Fetching Indicators
+title: Background Fetching Indicators（后台获取指示器）
 ref: docs/react/guides/background-fetching-indicators.md
 ---
 

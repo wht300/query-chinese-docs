@@ -1,6 +1,6 @@
 ---
 id: paginated-queries
-title: Paginated / Lagged Queries
+title: 分页/滞后查询 - Paginated / Lagged Queries
 ref: docs/react/guides/paginated-queries.md
 ---
 

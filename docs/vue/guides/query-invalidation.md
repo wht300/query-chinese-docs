@@ -1,6 +1,6 @@
 ---
 id: query-invalidation
-title: Query Invalidation
+title: 查询失效 - Query Invalidation
 ref: docs/react/guides/query-invalidation.md
 replace: { 'react-query': 'vue-query' }
 ---

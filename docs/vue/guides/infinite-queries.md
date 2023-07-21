@@ -1,6 +1,6 @@
 ---
 id: infinite-queries
-title: Infinite Queries
+title: 无限查询-Infinite Queries
 ref: docs/react/guides/infinite-queries.md
 ---
 
@@ -67,6 +67,7 @@ const { fetchNextPage } = useInfiniteQuery({
 })
 
 // Pass your own page param
+// 传递自己的页面参数
 const skipToCursor50 = () => fetchNextPage({ pageParam: 50 })
 ```
 
