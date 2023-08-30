@@ -2,9 +2,9 @@
 title: React Query
 ---
 
-The `react-query` package offers a 1st-class API for using TanStack Query via React. However, all of the primitives you receive from these hooks are core APIs that are shared across all of the TanStack Adapters including the Query Client, query results, query subscriptions, etc.
+`react-query` 包通过 React 提供了一个一流的 API，用于使用 TanStack Query。然而，你从这些 hooks 中获得的所有基本原语都是核心 API，它们在所有 TanStack 适配器中共享，包括 Query Client、查询结果、查询订阅等。
 
-## Example
+## 示例
 
 ```tsx
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
@@ -17,9 +17,9 @@ function Example() {
   return (
     <div>
       {query.isLoading
-        ? 'Loading...'
+        ? '加载中...'
         : query.isError
-        ? 'Error!'
+        ? '错误！'
         : query.data
         ? query.data.map((todo) => <div key={todo.id}>{todo.title}</div>)
         : null}

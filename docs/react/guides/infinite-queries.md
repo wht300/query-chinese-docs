@@ -1,26 +1,26 @@
 ---
 id: infinite-queries
-title: Infinite Queries
+title: 无限查询
 ---
 
-Rendering lists that can additively "load more" data onto an existing set of data or "infinite scroll" is also a very common UI pattern. TanStack Query supports a useful version of `useQuery` called `useInfiniteQuery` for querying these types of lists.
+在 UI 中，渲染可以将额外的数据“加载更多”到现有数据集中或进行“无限滚动”也是一种非常常见的模式。TanStack Query 支持一个名为 `useInfiniteQuery` 的有用版本，用于查询这些类型的列表。
 
-When using `useInfiniteQuery`, you'll notice a few things are different:
+使用 `useInfiniteQuery` 时，您会注意到一些不同之处：
 
-- `data` is now an object containing infinite query data:
-- `data.pages` array containing the fetched pages
-- `data.pageParams` array containing the page params used to fetch the pages
-- The `fetchNextPage` and `fetchPreviousPage` functions are now available
-- The `getNextPageParam` and `getPreviousPageParam` options are available for both determining if there is more data to load and the information to fetch it. This information is supplied as an additional parameter in the query function (which can optionally be overridden when calling the `fetchNextPage` or `fetchPreviousPage` functions)
-- A `hasNextPage` boolean is now available and is `true` if `getNextPageParam` returns a value other than `undefined`
-- A `hasPreviousPage` boolean is now available and is `true` if `getPreviousPageParam` returns a value other than `undefined`
-- The `isFetchingNextPage` and `isFetchingPreviousPage` booleans are now available to distinguish between a background refresh state and a loading more state
+- `data` 现在是一个包含无限查询数据的对象：
+- `data.pages` 数组，包含已获取的页面
+- `data.pageParams` 数组，包含用于获取页面的页面参数
+- 现在可用 `fetchNextPage` 和 `fetchPreviousPage` 函数
+- 对于确定是否有更多数据要加载以及获取信息的情况，现在可用 `getNextPageParam` 和 `getPreviousPageParam` 选项。此信息作为查询函数的附加参数提供（在调用 `fetchNextPage` 或 `fetchPreviousPage` 函数时可以选择覆盖）
+- 现在有一个 `hasNextPage` 布尔值，如果 `getNextPageParam` 返回除 `undefined` 以外的值，则为 `true`
+- 现在有一个 `hasPreviousPage` 布尔值，如果 `getPreviousPageParam` 返回除 `undefined` 以外的值，则为 `true`
+- 现在可用 `isFetchingNextPage` 和 `isFetchingPreviousPage` 布尔值，以区分后台刷新状态和加载更多状态
 
-> Note: When using options like `initialData` or `select` in your query, make sure that when you restructure your data that it still includes `data.pages` and `data.pageParams` properties, otherwise your changes will be overwritten by the query in its return!
+> 注意：当在查询中使用诸如 `initialData` 或 `select` 之类的选项时，请确保在重新构造数据时仍然包含 `data.pages` 和 `data.pageParams` 属性，否则查询将在其返回中覆盖您的更改！
 
-## Example
+## 示例
 
-Let's assume we have an API that returns pages of `projects` 3 at a time based on a `cursor` index along with a cursor that can be used to fetch the next group of projects:
+假设我们有一个返回每次基于 `cursor` 索引的 `projects` 页面的 API，每次返回 3 个页面，同时还有一个用于获取下一组项目的游标：
 
 ```tsx
 fetch('/api/projects?cursor=0')
@@ -33,24 +33,24 @@ fetch('/api/projects?cursor=9')
 // { data: [...] }
 ```
 
-With this information, we can create a "Load More" UI by:
+有了这些信息，我们可以通过以下方式创建“加载更多”界面：
 
-- Waiting for `useInfiniteQuery` to request the first group of data by default
-- Returning the information for the next query in `getNextPageParam`
-- Calling `fetchNextPage` function
+- 默认情况下，等待 `useInfiniteQuery` 请求第一组数据
+- 在 `getNextPageParam` 中返回下一个查询的信息
+- 调用 `fetchNextPage` 函数
 
-> Note: It's very important you do not call `fetchNextPage` with arguments unless you want them to override the `pageParam` data returned from the `getNextPageParam` function. e.g. Do not do this: `<button onClick={fetchNextPage} />` as this would send the onClick event to the `fetchNextPage` function.
+> 注意：非常重要的是，除非您希望它们覆盖来自 `getNextPageParam` 函数返回的 `pageParam` 数据，否则不要调用带有参数的 `fetchNextPage`。例如，不要这样做：`<button onClick={fetchNextPage} />`，因为这会将 onClick 事件发送到 `fetchNextPage` 函数。
 
 [//]: # 'Example'
 
 ```tsx
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 function Projects() {
   const fetchProjects = async ({ pageParam = 0 }) => {
-    const res = await fetch('/api/projects?cursor=' + pageParam)
-    return res.json()
-  }
+    const res = await fetch('/api/projects?cursor=' + pageParam);
+    return res.json();
+  };
 
   const {
     data,
@@ -64,7 +64,7 @@ function Projects() {
     queryKey: ['projects'],
     queryFn: fetchProjects,
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
-  })
+  });
 
   return status === 'loading' ? (
     <p>Loading...</p>
@@ -87,25 +87,28 @@ function Projects() {
           {isFetchingNextPage
             ? 'Loading more...'
             : hasNextPage
-            ? 'Load More'
-            : 'Nothing more to load'}
+              ? 'Load More'
+              : 'Nothing more to load'}
         </button>
       </div>
       <div>{isFetching && !isFetchingNextPage ? 'Fetching...' : null}</div>
     </>
-  )
+  );
 }
+
 ```
 
 [//]: # 'Example'
 
-## What happens when an infinite query needs to be refetched?
+## 无限查询需要重新获取时会发生什么？
 
-When an infinite query becomes `stale` and needs to be refetched, each group is fetched `sequentially`, starting from the first one. This ensures that even if the underlying data is mutated, we're not using stale cursors and potentially getting duplicates or skipping records. If an infinite query's results are ever removed from the queryCache, the pagination restarts at the initial state with only the initial group being requested.
+当无限查询变得陈旧并需要重新获取时，每个分组都会从第一个分组开始`顺序`获取。这样即使基础数据被改变，我们也不会使用陈旧的游标，可能会出现
+
+重复或跳过记录的情况。如果无限查询的结果从查询缓存中被删除，分页会从初始状态重新开始，只有初始分组会被请求。
 
 ### refetchPage
 
-If you only want to actively refetch a subset of all pages, you can pass the `refetchPage` function to `refetch` returned from `useInfiniteQuery`.
+如果您只想主动重新获取所有页面的子集，可以将 `refetchPage` 函数传递给从 `useInfiniteQuery` 返回的 `refetch`。
 
 [//]: # 'Example2'
 
@@ -116,23 +119,23 @@ const { refetch } = useInfiniteQuery({
   getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
 })
 
-// only refetch the first page
+// 仅重新获取第一页
 refetch({ refetchPage: (page, index) => index === 0 })
 ```
 
 [//]: # 'Example2'
 
-You can also pass this function as part of the 2nd argument (`queryFilters`) to [queryClient.refetchQueries](../reference/QueryClient#queryclientrefetchqueries), [queryClient.invalidateQueries](../reference/QueryClient#queryclientinvalidatequeries) or [queryClient.resetQueries](../reference/QueryClient#queryclientresetqueries).
+您还可以将此函数作为第二个参数（`queryFilters`）传递给 [queryClient.refetchQueries](../reference/QueryClient#queryclientrefetchqueries)、[queryClient.invalidateQueries](../reference/QueryClient#queryclientinvalidatequeries) 或 [queryClient.resetQueries](../reference/QueryClient#queryclientresetqueries)。
 
-**Signature**
+**签名**
 
 - `refetchPage: (page: TData, index: number, allPages: TData[]) => boolean`
 
-The function is executed for each page, and only pages where this function returns `true` will be refetched.
+该函数对每个页面执行，只有在此函数返回 `true` 的页面将被重新获取。
 
-## What if I need to pass custom information to my query function?
+## 如果我需要将自定义信息传递给我的查询函数怎么办？
 
-By default, the variable returned from `getNextPageParam` will be supplied to the query function, but in some cases, you may want to override this. You can pass custom variables to the `fetchNextPage` function which will override the default variable like so:
+默认情况下，从 `getNextPageParam` 返回的变量将被提供给查询函数，但在某些情况下，您可能希望覆盖此内容。您可以通过将自定义变量传递给 `fetchNextPage` 函数来覆盖默认变量，如下所示：
 
 [//]: # 'Example3'
 
@@ -154,16 +157,17 @@ function Projects() {
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
   })
 
-  // Pass your own page param
+// 传递您自己的页面参数
   const skipToCursor50 = () => fetchNextPage({ pageParam: 50 })
 }
+
 ```
 
 [//]: # 'Example3'
 
-## What if I want to implement a bi-directional infinite list?
+## 如果我想要实现双向无限列表怎么办？
 
-Bi-directional lists can be implemented by using the `getPreviousPageParam`, `fetchPreviousPage`, `hasPreviousPage` and `isFetchingPreviousPage` properties and functions.
+通过使用 `getPreviousPageParam`、`fetchPreviousPage`、`hasPreviousPage` 和 `isFetchingPreviousPage` 属性和函数，可以实现双向列表。
 
 [//]: # 'Example4'
 
@@ -178,9 +182,9 @@ useInfiniteQuery({
 
 [//]: # 'Example4'
 
-## What if I want to show the pages in reversed order?
+## 如果我想以相反的顺序显示页面怎么办？
 
-Sometimes you may want to show the pages in reversed order. If this is case, you can use the `select` option:
+有时您可能希望以相反的顺序显示页面。如果是这样，您可以使用 `select` 选项：
 
 [//]: # 'Example5'
 
@@ -197,9 +201,9 @@ useInfiniteQuery({
 
 [//]: # 'Example5'
 
-## What if I want to manually update the infinite query?
+## 如果我想要手动更新无限查询怎么办？
 
-### Manually removing first page:
+### 手动删除第一页：
 
 [//]: # 'Example6'
 
@@ -212,7 +216,7 @@ queryClient.setQueryData(['projects'], (data) => ({
 
 [//]: # 'Example6'
 
-### Manually removing a single value from an individual page:
+### 手动从单个页面中删除单个值：
 
 [//]: # 'Example7'
 
@@ -230,7 +234,7 @@ queryClient.setQueryData(['projects'], (data) => ({
 
 [//]: # 'Example7'
 
-### Keep only the first page:
+### 仅保留第一页：
 
 [//]: # 'Example8'
 
@@ -243,4 +247,4 @@ queryClient.setQueryData(['projects'], (data) => ({
 
 [//]: # 'Example8'
 
-Make sure to always keep the same data structure of pages and pageParams!
+请确保始终保持相同的页面和页面参数的数据结构！

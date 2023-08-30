@@ -1,14 +1,14 @@
 ---
 id: dependent-queries
-title: Dependent Queries
+title: 依赖查询
 ---
 
-Dependent (or serial) queries depend on previous ones to finish before they can execute. To achieve this, it's as easy as using the `enabled` option to tell a query when it is ready to run:
+依赖（或串行）查询在执行之前依赖于先前的查询完成。为了实现这一点，只需使用 `enabled` 选项告诉查询何时准备好运行：
 
 [//]: # 'Example'
 
 ```tsx
-// Get the user
+// 获取用户
 const { data: user } = useQuery({
   queryKey: ['user', email],
   queryFn: getUserByEmail,
@@ -16,7 +16,7 @@ const { data: user } = useQuery({
 
 const userId = user?.id
 
-// Then get the user's projects
+// 然后获取用户的项目
 const {
   status,
   fetchStatus,
@@ -24,28 +24,28 @@ const {
 } = useQuery({
   queryKey: ['projects', userId],
   queryFn: getProjectsByUser,
-  // The query will not execute until the userId exists
+  // 只有在 userId 存在时，查询才会执行
   enabled: !!userId,
 })
 ```
 
 [//]: # 'Example'
 
-The `projects` query will start in:
+`projects` 查询将从以下状态开始：
 
 ```tsx
 status: 'loading'
 fetchStatus: 'idle'
 ```
 
-As soon as the `user` is available, the `projects` query will be `enabled` and will then transition to:
+一旦 `user` 可用，`projects` 查询将被 `enabled`，然后转换为：
 
 ```tsx
 status: 'loading'
 fetchStatus: 'fetching'
 ```
 
-Once we have the projects, it will go to:
+一旦我们获取了项目，它将转换为：
 
 ```tsx
 status: 'success'

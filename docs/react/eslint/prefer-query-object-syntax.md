@@ -1,25 +1,25 @@
 ---
 id: prefer-query-object-syntax
-title: Prefer object syntax for useQuery
+title: 首选使用 useQuery 的对象语法
 ---
 
-You can use [`useQuery`](https://tanstack.com/query/v4/docs/reference/useQuery) in two different ways.
+您可以以两种不同的方式使用 [`useQuery`](https://tanstack.com/query/v4/docs/reference/useQuery)。
 
-Standard
+标准方式：
 
 ```tsx
 useQuery(queryKey, queryFn?, options?)
 
-// or
+// 或者
 
 useQuery(options)
 ```
 
-This rule prefers the second option, as it is more consistent with other React Query hooks, like `useQueries`. It will also be the only available option in a future major version.
+此规则首选第二种选项，因为它与其他 React Query hook（如 `useQueries`）更一致。在未来的主要版本中，这也将是唯一可用的选项。
 
-## Rule Details
+## 规则详解
 
-Examples of **incorrect** code for this rule:
+以下是此规则的错误示例代码：
 
 ```js
 /* eslint "@tanstack/query/prefer-query-object-syntax": "error" */
@@ -36,7 +36,7 @@ useQuery(queryKey, {
 });
 ```
 
-Examples of **correct** code for this rule:
+以下是此规则的正确示例代码：
 
 ```js
 import { useQuery } from '@tanstack/react-query';
@@ -48,15 +48,15 @@ useQuery({
 });
 ```
 
-## When Not To Use It
+## 何时不使用
 
-If you don't care about useQuery consistency, then you will not need this rule.
+如果您不关心 `useQuery` 的一致性，则不需要使用此规则。
 
-## Attributes
+## 属性
 
-- [x] ✅ Recommended
-- [x] 🔧 Fixable
+- [x] ✅ 推荐
+- [x] 🔧 可修复
 
-## Credits
+## 鸣谢
 
-This rule was initially developed by [KubaJastrz](https://github.com/KubaJastrz) in [eslint-plugin-react-query](https://github.com/KubaJastrz/eslint-plugin-react-query).
+此规则最初由[KubaJastrz](https://github.com/KubaJastrz)在 [eslint-plugin-react-query](https://github.com/KubaJastrz/eslint-plugin-react-query) 中开发。

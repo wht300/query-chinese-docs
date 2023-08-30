@@ -1,73 +1,73 @@
 ---
 id: filters
-title: Filters
+title: 过滤器
 ---
 
-Some methods within TanStack Query accept a `QueryFilters` or `MutationFilters` object.
+TanStack Query 中的某些方法接受 `QueryFilters` 或 `MutationFilters` 对象。
 
-## `Query Filters`
+## `查询过滤器`
 
-A query filter is an object with certain conditions to match a query with:
+查询过滤器是一个具有特定匹配条件的对象，用于匹配查询：
 
 ```tsx
-// Cancel all queries
+// 取消所有查询
 await queryClient.cancelQueries()
 
-// Remove all inactive queries that begin with `posts` in the key
+// 移除所有在键中以 `posts` 开头的非活动查询
 queryClient.removeQueries({ queryKey: ['posts'], type: 'inactive' })
 
-// Refetch all active queries
+// 重新获取所有活动查询
 await queryClient.refetchQueries({ type: 'active' })
 
-// Refetch all active queries that begin with `posts` in the key
+// 重新获取所有在键中以 `posts` 开头的活动查询
 await queryClient.refetchQueries({ queryKey: ['posts'], type: 'active' })
 ```
 
-A query filter object supports the following properties:
+查询过滤器对象支持以下属性：
 
 - `queryKey?: QueryKey`
-  - Set this property to define a query key to match on.
+  - 设置此属性以定义要匹配的查询键。
 - `exact?: boolean`
-  - If you don't want to search queries inclusively by query key, you can pass the `exact: true` option to return only the query with the exact query key you have passed.
+  - 如果不想通过查询键进行包含性搜索，可以传递 `exact: true` 选项，仅返回与您传递的完全相同的查询。
 - `type?: 'active' | 'inactive' | 'all'`
-  - Defaults to `all`
-  - When set to `active` it will match active queries.
-  - When set to `inactive` it will match inactive queries.
+  - 默认为 `all`
+  - 当设置为 `active` 时，将匹配活动查询。
+  - 当设置为 `inactive` 时，将匹配非活动查询。
 - `stale?: boolean`
-  - When set to `true` it will match stale queries.
-  - When set to `false` it will match fresh queries.
+  - 当设置为 `true` 时，将匹配陈旧的查询。
+  - 当设置为 `false` 时，将匹配新鲜的查询。
 - `fetchStatus?: FetchStatus`
-  - When set to `fetching` it will match queries that are currently fetching.
-  - When set to `paused` it will match queries that wanted to fetch, but have been `paused`.
-  - When set to `idle` it will match queries that are not fetching.
+  - 当设置为 `fetching` 时，将匹配当前正在获取数据的查询。
+  - 当设置为 `paused` 时，将匹配因为被 `paused` 而停止获取数据的查询。
+  - 当设置为 `idle` 时，将匹配未在获取数据的查询。
 - `predicate?: (query: Query) => boolean`
-  - This predicate function will be used as a final filter on all matching queries. If no other filters are specified, this function will be evaluated against every query in the cache.
+  - 此谓词函数将用作对所有匹配的查询的最终过滤器。如果没有指定其他过滤器，则此函数将针对缓存中的每个查询进行评估。
 
-## `Mutation Filters`
+## `突变过滤器`
 
-A mutation filter is an object with certain conditions to match a mutation with:
+突变过滤器是一个具有特定匹配条件的对象，用于匹配突变：
 
 ```tsx
-// Get the number of all fetching mutations
+// 获取所有正在获取的突变数
 await queryClient.isMutating()
 
-// Filter mutations by mutationKey
+// 通过突变键过滤突变
 await queryClient.isMutating({ mutationKey: ["post"] })
 
-// Filter mutations using a predicate function
+// 使用谓词函数过滤突变
 await queryClient.isMutating({
   predicate: (mutation) => mutation.options.variables?.id === 1,
 })
 ```
 
-A mutation filter object supports the following properties:
+突变过滤器对象支持以下属性：
 
 - `mutationKey?: MutationKey`
-  - Set this property to define a mutation key to match on.
+  - 设置此属性以定义要匹配的突变键。
 - `exact?: boolean`
-  - If you don't want to search mutations inclusively by mutation key, you can pass the `exact: true` option to return only the mutation with the exact mutation key you have passed.
+  - 如果不想通过突变键进行包含性搜索，可以传递 `exact: true` 选项，仅返回与您传递的完全相同的突变。
 - `fetching?: boolean`
-  - When set to `true` it will match mutations that are currently fetching.
-  - When set to `false` it will match mutations that are not fetching.
+  - 当设置为 `true` 时，将匹配当前正在获取数据的突变。
+  - 当设置为 `false` 时，将匹配未在获取数据的突变。
 - `predicate?: (mutation: Mutation) => boolean`
-  - This predicate function will be used as a final filter on all matching mutations. If no other filters are specified, this function will be evaluated against every mutation in the cache.
+  - 此谓词函数将用作对所有匹配的突变的最终过滤器。如果没有指定其他过滤器，则此函数将针对缓存中的每个突变进行评估。

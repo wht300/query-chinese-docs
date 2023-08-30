@@ -1,6 +1,6 @@
 ---
 id: placeholder-query-data
-title: 查询数据占位符 - Placeholder Query Data
+title: 占位符查询数据
 ref: docs/react/guides/placeholder-query-data.md
 ---
 
@@ -26,9 +26,7 @@ const result = useQuery({
   queryKey: ['blogPost', blogPostId],
   queryFn: () => fetch(`/blogPosts/${blogPostId}`),
   placeholderData: () => {
-    // Use the smaller/preview version of the blogPost from the 'blogPosts'
-    // query as the placeholder data for this blogPost query
-    // 将会从 'blogPosts' 查询到的数据中找到该查询id的数据作为placeholder数据显示
+    // 使用 'blogPosts' 查询中较小/预览版本的 blogPost 作为此 blogPost 查询的占位符数据
     return queryClient
       .getQueryData(['blogPosts'])
       ?.find((d) => d.id === blogPostId)
@@ -39,3 +37,4 @@ const result = useQuery({
 [//]: # 'Example3'
 [//]: # 'Materials'
 [//]: # 'Materials'
+```

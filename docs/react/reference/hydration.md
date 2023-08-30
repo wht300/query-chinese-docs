@@ -1,11 +1,11 @@
 ---
 id: hydration
-title: hydration
+title: 水合 (Hydration)
 ---
 
 ## `dehydrate`
 
-`dehydrate` creates a frozen representation of a `cache` that can later be hydrated with `Hydrate`, `useHydrate`, or `hydrate`. This is useful for passing prefetched queries from server to client or persisting queries to localStorage or other persistent locations. It only includes currently successful queries by default.
+`dehydrate` 创建一个被冻结的 `cache` 表示，稍后可以使用 `Hydrate`、`useHydrate` 或 `hydrate` 进行水合。这在将预取的查询从服务器传递到客户端，或将查询持久化到 localStorage 或其他持久位置时非常有用。默认情况下，它只包含当前成功的查询。
 
 ```tsx
 import { dehydrate } from '@tanstack/react-query'
@@ -15,56 +15,56 @@ const dehydratedState = dehydrate(queryClient, {
 })
 ```
 
-**Options**
+**选项**
 
 - `client: QueryClient`
-  - **Required**
-  - The `queryClient` that should be dehydrated
+  - **必需**
+  - 要进行水合的 `queryClient`
 - `options: DehydrateOptions`
-  - Optional
+  - 可选
   - `dehydrateMutations: boolean`
-    - Optional
-    - Whether or not to dehydrate mutations.
+    - 可选
+    - 是否对突变进行水合。
   - `dehydrateQueries: boolean`
-    - Optional
-    - Whether or not to dehydrate queries.
+    - 可选
+    - 是否对查询进行水合。
   - `shouldDehydrateMutation: (mutation: Mutation) => boolean`
-    - Optional
-    - This function is called for each mutation in the cache
-    - Return `true` to include this mutation in dehydration, or `false` otherwise
-    - The default version only includes paused mutations
-    - If you would like to extend the function while retaining the previous behavior, import and execute `defaultShouldDehydrateMutation` as part of the return statement
+    - 可选
+    - 对缓存中的每个突变调用此函数
+    - 返回 `true` 以在水合中包括此突变，或返回 `false` 否则
+    - 默认版本只包括已暂停的突变
+    - 如果您想在保留以前行为的同时扩展函数，请导入并在返回语句中执行 `defaultShouldDehydrateMutation`
   - `shouldDehydrateQuery: (query: Query) => boolean`
-    - Optional
-    - This function is called for each query in the cache
-    - Return `true` to include this query in dehydration, or `false` otherwise
-    - The default version only includes successful queries, do `shouldDehydrateQuery: () => true` to include all queries
-    - If you would like to extend the function while retaining the previous behavior, import and execute `defaultShouldDehydrateQuery` as part of the return statement
+    - 可选
+    - 对缓存中的每个查询调用此函数
+    - 返回 `true` 以在水合中包括此查询，或返回 `false` 否则
+    - 默认版本只包括成功的查询，通过 `shouldDehydrateQuery: () => true` 可以包括所有查询
+    - 如果您想在保留以前行为的同时扩展函数，请导入并在返回语句中执行 `defaultShouldDehydrateQuery`
 
-**Returns**
+**返回值**
 
 - `dehydratedState: DehydratedState`
-  - This includes everything that is needed to hydrate the `queryClient` at a later point
-  - You **should not** rely on the exact format of this response, it is not part of the public API and can change at any time
-  - This result is not in serialized form, you need to do that yourself if desired
+  - 包括在稍后的某个时候水合 `queryClient` 所需的一切内容
+  - 您 **不应该** 依赖于此响应的确切格式，它不是公共 API 的一部分，可以随时更改
+  - 此结果不是以序列化形式呈现的，如果需要，您需要自行处理
 
-### limitations
+### 限制
 
-Some storage systems (such as browser [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)) require values to be JSON serializable. If you need to dehydrate values that are not automatically serializable to JSON (like `Error` or `undefined`), you have to serialize them for yourself. Since only successful queries are included per default, to also include `Errors`, you have to provide `shouldDehydrateQuery`, e.g.:
+某些存储系统（如浏览器的 [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)）要求值能够序列化为 JSON。如果您需要对不自动序列化为 JSON 的值（如 `Error` 或 `undefined`）进行水合，您必须自行序列化它们。由于默认情况下只包括成功的查询，如果还要包括 `Errors`，您必须提供 `shouldDehydrateQuery`，例如：
 
 ```tsx
-// server
-const state = dehydrate(client, { shouldDehydrateQuery: () => true }) // to also include Errors
-const serializedState = mySerialize(state) // transform Error instances to objects
+// 服务器
+const state = dehydrate(client, { shouldDehydrateQuery: () => true }) // 也包括 Errors
+const serializedState = mySerialize(state) // 将 Error 实例转换为对象
 
-// client
-const state = myDeserialize(serializedState) // transform objects back to Error instances
+// 客户端
+const state = myDeserialize(serializedState) // 将对象转换回 Error 实例
 hydrate(client, state)
 ```
 
 ## `hydrate`
 
-`hydrate` adds a previously dehydrated state into a `cache`.
+`hydrate` 将之前水合的状态添加到 `cache` 中。
 
 ```tsx
 import { hydrate } from '@tanstack/react-query'
@@ -72,32 +72,32 @@ import { hydrate } from '@tanstack/react-query'
 hydrate(queryClient, dehydratedState, options)
 ```
 
-**Options**
+**选项**
 
 - `client: QueryClient`
-  - **Required**
-  - The `queryClient` to hydrate the state into
+  - **必需**
+  - 要将状态水合到的 `queryClient`
 - `dehydratedState: DehydratedState`
-  - **Required**
-  - The state to hydrate into the client
+  - **必需**
+  - 要水合到客户端的状态
 - `options: HydrateOptions`
-  - Optional
+  - 可选
   - `defaultOptions: DefaultOptions`
-    - Optional
-    - `mutations: MutationOptions` The default mutation options to use for the hydrated mutations.
-    - `queries: QueryOptions` The default query options to use for the hydrated queries.
+    - 可选
+    - `mutations: MutationOptions` 用于水合突变的默认突变选项。
+    - `queries: QueryOptions` 用于水合查询的默认查询选项。
   - `context?: React.Context<QueryClient | undefined>`
-    - Use this to use a custom React Query context. Otherwise, `defaultContext` will be used.
+    - 使用此选项可以使用自定义的 React Query 上下文。否则将使用 `defaultContext`。
 
-### Limitations
+### 限制
 
-If the queries included in dehydration already exist in the queryCache, `hydrate` does not overwrite them and they will be **silently** discarded.
+如果水合中包含的查询已经存在于 queryCache 中，`hydrate` 不会覆盖它们，并且它们将被**静默**丢弃。
 
 [//]: # 'useHydrate'
 
 ## `useHydrate`
 
-`useHydrate` adds a previously dehydrated state into the `queryClient` that would be returned by `useQueryClient()`. If the client already contains data, the new queries will be intelligently merged based on update timestamp.
+`useHydrate` 将之前水合的状态添加到由 `useQueryClient()` 返回的 `queryClient` 中。如果客户端已经包含数据，新的查询将根据更新时间戳进行智能合并。
 
 ```tsx
 import { useHydrate } from '@tanstack/react-query'
@@ -105,24 +105,24 @@ import { useHydrate } from '@tanstack/react-query'
 useHydrate(dehydratedState, options)
 ```
 
-**Options**
+**选项**
 
 - `dehydratedState: DehydratedState`
-  - **Required**
-  - The state to hydrate
+  - **必需**
+  - 要水合的状态
 - `options: HydrateOptions`
-  - Optional
+  - 可选
   - `defaultOptions: QueryOptions`
-    - The default query options to use for the hydrated queries.
+    - 用于水合查询的默认查询选项。
   - `context?: React.Context<QueryClient | undefined>`
-    - Use this to use a custom React Query context. Otherwise, `defaultContext` will be used.
+    - 使用此选项可以使用自定义的 React Query 上下文。否则将使用 `defaultContext`。
 
 [//]: # 'useHydrate'
 [//]: # 'Hydrate'
 
 ## `Hydrate`
 
-`Hydrate` wraps `useHydrate` into component. Can be useful when you need hydrate in class component or need hydrate on same level where `QueryClientProvider` rendered.
+`Hydrate` 将 `useHydrate` 包装成组件。在您需要在类组件中进行水合，或者需要在与 `QueryClientProvider` 渲染的同一级别进行水合时，可能会很有用。
 
 ```tsx
 import { Hydrate } from '@tanstack/react-query'
@@ -132,15 +132,17 @@ function App() {
 }
 ```
 
-**Options**
+**选项**
 
 - `state: DehydratedState`
-  - The state to hydrate
+  - 要水合的状态
 - `options: HydrateOptions`
-  - Optional
+  - 可选
   - `defaultOptions: QueryOptions`
-    - The default query options to use for the hydrated queries.
-  - `context?: React.Context<QueryClient | undefined>`
-    - Use this to use a custom React Query context. Otherwise, `defaultContext` will be used.
+    - 用于水合查询的默认查询选项。
+  - `context?: React
+
+.Context<QueryClient | undefined>`
+- 使用此选项可以使用自定义的 React Query 上下文。否则将使用 `defaultContext`。
 
 [//]: # 'Hydrate'

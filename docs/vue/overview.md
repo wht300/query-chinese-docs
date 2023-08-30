@@ -1,6 +1,6 @@
 ---
 id: overview
-title: 概述 - Overview
+title: 概述 - 概述
 ref: docs/react/overview.md
 replace: { 'React': 'Vue', 'react-query': 'vue-query' }
 ---
@@ -9,8 +9,9 @@ replace: { 'React': 'Vue', 'react-query': 'vue-query' }
 [//]: # 'Example'
 [//]: # 'Materials'
 
-## You talked me into it, so what now?
+## 你说服了我，那现在怎么办？
 
-- Learn Vue Query at your own pace with our amazingly thorough [Walkthrough Guide](../installation) and [API Reference](../reference/useQuery)
+- 通过我们非常详尽的[指南](../installation)和[API 参考](../reference/useQuery)以自己的节奏学习 Vue Query。
 
 [//]: # 'Materials'
+```

@@ -1,15 +1,15 @@
 ---
 id: ssr
-title: SSR
+title: 服务器端渲染（SSR）
 ---
 
-Vue Query supports prefetching multiple queries on the server and then _dehydrating_ those queries to the queryClient. This means the server can prerender markup that is immediately available on page load and as soon as JS is available, Vue Query can upgrade or _hydrate_ those queries with the full functionality of the library. This includes refetching those queries on the client if they have become stale since the time they were rendered on the server.
+Vue Query 支持在服务器上预取多个查询，然后将这些查询 _脱水_ 到 queryClient。这意味着服务器可以预渲染在页面加载时立即可用的标记，并且一旦 JS 可用，Vue Query 就可以升级或 _水合_ 这些查询，以便使用库的全部功能。这包括在客户端重新获取这些查询，如果自从它们在服务器上呈现时就已变为陈旧。
 
-## Using Nuxt.js
+## 使用 Nuxt.js
 
 ### Nuxt 3
 
-First create `vue-query.ts` file in your `plugins` directory with the following content:
+首先，在您的 `plugins` 目录中创建 `vue-query.ts` 文件，其内容如下：
 
 ```ts
 import type { DehydratedState, VueQueryPluginOptions } from '@tanstack/vue-query'
@@ -20,7 +20,7 @@ import { useState } from '#app'
 export default defineNuxtPlugin((nuxt) => {
   const vueQueryState = useState<DehydratedState | null>('vue-query')
 
-  // Modify your Vue Query global settings here
+  // 在这里修改您的 Vue Query 全局设置
   const queryClient = new QueryClient({
     defaultOptions: { queries: { staleTime: 5000 } },
   })
@@ -42,9 +42,9 @@ export default defineNuxtPlugin((nuxt) => {
 })
 ```
 
-Now you are ready to prefetch some data in your pages with `onServerPrefetch`.
+现在，您可以在页面中使用 `onServerPrefetch` 预取一些数据。
 
-- Prefetch all the queries that you need with `queryClient.prefetchQuery` or `suspense`
+- 使用 `queryClient.prefetchQuery` 或 `suspense` 预取您需要的所有查询
 
 ```ts
 export default defineComponent({
@@ -62,14 +62,14 @@ export default defineComponent({
 
 ### Nuxt 2
 
-First create `vue-query.js` file in your `plugins` directory with the following content:
+首先，在您的 `plugins` 目录中创建 `vue-query.js` 文件，其内容如下：
 
 ```js
 import Vue from 'vue'
 import { VueQueryPlugin, QueryClient, hydrate } from '@tanstack/vue-query'
 
 export default (context) => {
-  // Modify your Vue Query global settings here
+  // 在这里修改您的 Vue Query 全局设置
   const queryClient = new QueryClient({
     defaultOptions: { queries: { staleTime: 5000 } },
   })
@@ -85,7 +85,7 @@ export default (context) => {
 }
 ```
 
-Add this plugin to your `nuxt.config.js`
+将此插件添加到您的 `nuxt.config.js` 文件中
 
 ```js
 module.exports = {
@@ -94,18 +94,18 @@ module.exports = {
 };
 ```
 
-Now you are ready to prefetch some data in your pages with `onServerPrefetch`.
+现在，您可以在页面中使用 `onServerPrefetch` 预取一些数据。
 
-- Use `useContext` to get nuxt context
-- Use `useQueryClient` to get server-side instance of `queryClient`
-- Prefetch all the queries that you need with `queryClient.prefetchQuery` or `suspense`
-- Dehydrate `queryClient` to the `nuxtContext`
+- 使用 `useContext` 获取 nuxt 上下文
+- 使用 `useQueryClient` 获取 `queryClient` 的服务器端实例
+- 使用 `queryClient.prefetchQuery` 或 `suspense` 预取您需要的所有查询
+- 将 `queryClient` 脱水到 `nuxtContext`
 
 ```js
 // pages/todos.vue
 <template>
   <div>
-    <button @click="refetch">Refetch</button>
+    <button @click="refetch">重新获取</button>
     <p>{{ data }}</p>
   </div>
 </template>
@@ -120,9 +120,9 @@ import { useQuery, useQueryClient, dehydrate } from "@tanstack/vue-query";
 
 export default defineComponent({
   setup() {
-    // This will be prefetched and sent from the server
+    // 这将在服务器上预取并发送
     const { refetch, data, suspense } = useQuery("todos", getTodos);
-    // This won't be prefetched, it will start fetching on client side
+    // 这不会被预取，它将在客户端上开始获取
     const { data2 } = useQuery("todos2", getTodos);
 
     onServerPrefetch(async () => {
@@ -142,81 +142,84 @@ export default defineComponent({
 </script>
 ```
 
-As demonstrated, it's fine to prefetch some queries and let others fetch on the queryClient. This means you can control what content server renders or not by adding or removing `prefetchQuery` or `suspense` for a specific query.
+正如演示的那样，预取一些查询，并让其他查询在 `queryClient` 上获取，是可以的。这意味着您可以通过添加或删除特定查询的 `prefetchQuery` 或 `suspense` 来控制服务器渲染的内容。
 
-## Using Vite SSR
+## 使用 Vite SSR
 
-Sync VueQuery client state with [vite-ssr](https://github.com/frandiox/vite-ssr) in order to serialize it in the DOM:
+使用 [vite-ssr](https://github.com/frandiox/vite-ssr) 将 VueQuery 客户端状态与其同步，以便在 DOM 中序列化它：
 
 ```js
-// main.js (entry point)
+// main.js (入口点)
 import App from './App.vue'
 import viteSSR from 'vite-ssr/vue'
 import { QueryClient, VueQueryPlugin, hydrate, dehydrate } from '@tanstack/vue-query'
 
 export default viteSSR(App, { routes: [] }, ({ app, initialState }) => {
-  // -- This is Vite SSR main hook, which is called once per request
+  // -- 这是 Vite SSR 的主要挂钩，每个请求调用一次
 
-  // Create a fresh VueQuery client
+  // 创建一个新的 VueQuery 客户端
   const queryClient = new QueryClient()
 
-  // Sync initialState with the client state
+  // 将初始状态与客户端状态同步
   if (import.meta.env.SSR) {
-    // Indicate how to access and serialize VueQuery state during SSR
+    // 指示在 SSR 期间如何访问和序列化 VueQuery 状态
     initialState.vueQueryState = { toJSON: () => dehydrate(queryClient) }
   } else {
-    // Reuse the existing state in the browser
+    // 在浏览器中重用现有状态
     hydrate(queryClient, initialState.vueQueryState)
   }
 
-  // Mount and provide the client to the app components
+  // 安装并为应用程序组件提供客户端
   app.use(VueQueryPlugin, { queryClient })
 })
 ```
 
-Then, call VueQuery from any component using Vue's `onServerPrefetch`:
+然后，从任何组件中调用 VueQuery，使用 Vue 的 `onServerPrefetch`：
 
 ```html
 <!-- MyComponent.vue -->
 <template>
   <div>
-    <button @click="refetch">Refetch</button>
+    <button @click="refetch">重新获取</button>
     <p>{{ data }}</p>
   </div>
 </template>
 
 <script setup>
   import { useQuery } from '@tanstack/vue-query'
-  import { onServerPrefetch } from 'vue'
 
-  // This will be prefetched and sent from the server
+
+ import { onServerPrefetch } from 'vue'
+
+  // 这将在服务器上预取并发送
   const { refetch, data, suspense } = useQuery('todos', getTodos)
   onServerPrefetch(suspense)
 </script>
 ```
 
-## Tips, Tricks and Caveats
+## 提示、技巧和注意事项
 
-### Only successful queries are included in dehydration
+### 仅成功的查询包括在脱水中
 
-Any query with an error is automatically excluded from dehydration. This means that the default behavior is to pretend these queries were never loaded on the server, usually showing a loading state instead, and retrying the queries on the queryClient. This happens regardless of error.
+任何带有错误的查询都会自动从脱水中排除。这意味着默认行为是假装这些查询在服务器上从未加载过，通常显示加载状态，并在 queryClient 上重试这些查询。这发生在任何错误情况下。
 
-Sometimes this behavior is not desirable, maybe you want to render an error page with a correct status code instead on certain errors or queries. In those cases, use `fetchQuery` and catch any errors to handle those manually.
+有时这种行为是不可取的，也许您希望根据某些错误或查询，在某些错误情况下，呈现一个带有正确状态码的错误页面。在这些情况下，使用 `fetchQuery` 并捕获任何错误以手动处理。
 
-### Staleness is measured from when the query was fetched on the server
+### 新鲜度是从查询在服务器上获取的时间开始计算的
 
-A query is considered stale depending on when it was `dataUpdatedAt`. A caveat here is that the server needs to have the correct time for this to work properly, but UTC time is used, so timezones do not factor into this.
+查询的新鲜度取决于其 `dataUpdatedAt` 何时。一个注意点是服务器需要有正确的时间，但使用的是 UTC 时间，因此时区不会影响这一点。
 
-Because `staleTime` defaults to `0`, queries will be refetched in the background on page load by default. You might want to use a higher `staleTime` to avoid this double fetching, especially if you don't cache your markup.
+由于 `staleTime` 默认为 `0`，默认情况下，查询将在页面加载时立即在后台重新获取。如果不缓存标记，您可能希望使用较高的 `staleTime` 来避免这种双重获取，特别是在不缓存标记的情况下。
 
-This refetching of stale queries is a perfect match when caching markup in a CDN! You can set the cache time of the page itself decently high to avoid having to re-render pages on the server, but configure the `staleTime` of the queries lower to make sure data is refetched in the background as soon as a user visits the page. Maybe you want to cache the pages for a week, but refetch the data automatically on page load if it's older than a day?
+这种刷新陈旧查询的方法非常适用于在 CDN 中缓存标记！您可以将页面自身的缓存时间设置得足够长，以避免不必要地在服务器上重新渲染页面，但是将查询的 `staleTime` 配置为较低，以确保数据在用户访问页面时在后台自动刷新，如果数据自从最初呈现在服务器上后已过时。
 
-### High memory consumption on server
+### 服务器上的高内存消耗
 
-In case you are creating the `QueryClient` for every request, Vue Query creates the isolated cache for this client, which is preserved in memory for the `cacheTime` period. That may lead to high memory consumption on server in case of high number of requests during that period.
+如果您为每个请求创建 `QueryClient`，Vue Query 会为此客户端创建隔离的缓存，在 `cacheTime` 期间将其保存在内存中。在该期间高请求量的情况下，这可能导致服务器上的内存消耗较高。
 
-On the server, `cacheTime` defaults to `Infinity` which disables manual garbage collection and will automatically clear memory once a request has finished. If you are explicitly setting a non-Infinity `cacheTime` then you will be responsible for clearing the cache early.
+在服务器上，默认情况下 `cacheTime` 为 `Infinity`，这会禁用手动垃圾回收，并在请求结束后自动清除内存。如果您明确设置非无限制的 `cacheTime`，那么您将负责及早清除缓存。
 
-To clear the cache after it is not needed and to lower memory consumption, you can add a call to [`queryClient.clear()`](../reference/QueryClient#queryclientclear) after the request is handled and dehydrated state has been sent to the client.
+为了在不再需要缓存时清除缓存以及降低内存消耗，您可以在处理请求并将脱水状态发送到客户端后，添加对 [`queryClient.clear()`](../reference/QueryClient#queryclientclear) 的调用。
 
-Alternatively, you can set a smaller `cacheTime`.
+或者，您可以设置较小的 `cacheTime`。
+```

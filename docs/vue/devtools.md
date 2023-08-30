@@ -1,14 +1,14 @@
 ---
 id: devtools
-title: Devtools
+title: 开发工具（Devtools）
 ---
 
-Wave your hands in the air and shout hooray because Vue Query comes with dedicated devtools! 🥳
+挥动您的双手，高声喊叫万岁，因为 Vue Query 配备了专用的开发工具！🥳
 
-When you begin your Vue Query journey, you'll want these devtools by your side. They help visualize all of the inner workings of Vue Query and will likely save you hours of debugging if you find yourself in a pinch!
+当您开始使用 Vue Query 时，您会希望这些开发工具一直在您身边。它们有助于可视化 Vue Query 的所有内部工作情况，如果您陷入困境，它们很可能会为您节省数小时的调试时间！
 
-The only thing you need to do is to install the official **[Vue Devtools](https://devtools.vuejs.org/guide/installation.html)**.
+您唯一需要做的是安装官方的 **[Vue Devtools](https://devtools.vuejs.org/guide/installation.html)**。
 
-Vue Query will seamlessly integrate with the official devtools, adding custom inspector and timeline events.
-Devtool code will be treeshaken from production bundles by default.
-
+Vue Query 将与官方开发工具无缝集成，添加自定义的检查器和时间轴事件。
+开发工具代码将在默认情况下从生产捆绑包中进行树摇除。
+```

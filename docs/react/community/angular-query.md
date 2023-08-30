@@ -3,16 +3,16 @@ id: angular-query
 title: Angular Query
 ---
 
-The Angular adapter is available as a community library: [ngneat/query](https://ngneat.github.io/query/). It is based on the TanStack/query-core.
+Angular 适配器作为社区库可用：[ngneat/query](https://ngneat.github.io/query/)。它基于 TanStack/query-core。
 
-## Installation
+## 安装
 
 ```bash
 $ npm i @ngneat/query
-# or
+# 或者
 $ pnpm add @ngneat/query
-# or
+# 或者
 $ yarn add @ngneat/query
 ```
 
-Check the complete documentation on [GitHub](https://github.com/ngneat/query).
+请查阅 [GitHub 上的完整文档](https://github.com/ngneat/query)。

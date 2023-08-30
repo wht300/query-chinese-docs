@@ -1,18 +1,18 @@
 ---
 id: disabling-queries
-title: Disabling/Pausing Queries
+title: 禁用/暂停查询
 ---
 
-If you ever want to disable a query from automatically running, you can use the `enabled = false` option.
+如果您希望禁用自动运行的查询，您可以使用 `enabled = false` 选项。
 
-When `enabled` is `false`:
+当 `enabled` 为 `false` 时：
 
-- If the query has cached data, then the query will be initialized in the `status === 'success'` or `isSuccess` state.
-- If the query does not have cached data, then the query will start in the `status === 'loading'` and `fetchStatus === 'idle'` state.
-- The query will not automatically fetch on mount.
-- The query will not automatically refetch in the background.
-- The query will ignore query client `invalidateQueries` and `refetchQueries` calls that would normally result in the query refetching.
-- `refetch` returned from `useQuery` can be used to manually trigger the query to fetch.
+- 如果查询具有缓存数据，那么查询将在 `status === 'success'` 或 `isSuccess` 状态下初始化。
+- 如果查询没有缓存数据，那么查询将从 `status === 'loading'` 和 `fetchStatus === 'idle'` 状态开始。
+- 查询将不会在挂载时自动获取数据。
+- 查询将不会自动在后台进行重新获取。
+- 查询将忽略查询客户端的 `invalidateQueries` 和 `refetchQueries` 调用，这些调用通常会导致查询重新获取。
+- `useQuery` 返回的 `refetch` 可用于手动触发查询获取数据。
 
 [//]: # 'Example'
 
@@ -27,7 +27,7 @@ function Todos() {
 
   return (
     <div>
-      <button onClick={() => refetch()}>Fetch Todos</button>
+      <button onClick={() => refetch()}>获取待办事项</button>
 
       {data ? (
         <>
@@ -38,14 +38,14 @@ function Todos() {
           </ul>
         </>
       ) : isError ? (
-        <span>Error: {error.message}</span>
+        <span>错误：{error.message}</span>
       ) : isInitialLoading ? (
-        <span>Loading...</span>
+        <span>加载中...</span>
       ) : (
-        <span>Not ready ...</span>
+        <span>尚未准备好...</span>
       )}
 
-      <div>{isFetching ? 'Fetching...' : null}</div>
+      <div>{isFetching ? '获取中...' : null}</div>
     </div>
   )
 }
@@ -53,11 +53,11 @@ function Todos() {
 
 [//]: # 'Example'
 
-Permanently disabling a query opts out of many great features that TanStack Query has to offer (like background refetches), and it's also not the idiomatic way. It takes you from the declarative approach (defining dependencies when your query should run) into an imperative mode (fetch whenever I click here). It is also not possible to pass parameters to `refetch`. Oftentimes, all you want is a lazy query that defers the initial fetch:
+永久禁用查询会放弃 TanStack Query 提供的许多优秀功能（例如后台重新获取），而且这也不是一种惯用的方法。它从声明式的方式（在查询应何时运行时定义依赖项）转变为命令式模式（我在这里点击时获取）。也不可能向 `refetch` 传递参数。通常情况下，您只需要一个延迟查询来推迟初始获取：
 
-## Lazy Queries
+## 延迟查询
 
-The enabled option can not only be used to permanently disable a query, but also to enable / disable it at a later time. A good example would be a filter form where you only want to fire off the first request once the user has entered a filter value:
+`enabled` 选项不仅可以用于永久禁用查询，还可以在以后的某个时间启用/禁用查询。一个很好的例子是筛选表单，您只想在用户输入筛选值后才触发第一次请求：
 
 [//]: # 'Example2'
 
@@ -68,13 +68,13 @@ function Todos() {
   const { data } = useQuery({
       queryKey: ['todos', filter],
       queryFn: () => fetchTodos(filter),
-      // ⬇️ disabled as long as the filter is empty
+      // ⬇️ 仅在筛选器不为空时启用
       enabled: !!filter
   })
 
   return (
       <div>
-        // 🚀 applying the filter will enable and execute the query
+        // 🚀 应用筛选器将启用并执行查询
         <FiltersForm onApply={setFilter} />
         {data && <TodosTable data={data}} />
       </div>
@@ -86,10 +86,10 @@ function Todos() {
 
 ### isInitialLoading
 
-Lazy queries will be in `status: 'loading'` right from the start because `loading` means that there is no data yet. This is technically true, however, since we are not currently fetching any data (as the query is not _enabled_), it also means you likely cannot use this flag to show a loading spinner.
+延迟查询从一开始就处于 `status: 'loading'` 状态，因为 `loading` 意味着尚无数据。从技术上讲，这是正确的，然而，由于我们当前并未获取任何数据（因为查询未 _启用_），因此您可能无法使用此标志显示加载中的旋转图标。
 
-If you are using disabled or lazy queries, you can use the `isInitialLoading` flag instead. It's a derived flag that is computed from:
+如果您正在使用禁用或延迟查询，您可以使用 `isInitialLoading` 标志。它是一个派生标志，其计算方式为：
 
 `isLoading && isFetching`
 
-so it will only be true if the query is currently fetching for the first time.
+因此，只有在查询首次获取数据时，它才会为真。

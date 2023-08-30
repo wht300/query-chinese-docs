@@ -1,22 +1,22 @@
 ---
 id: placeholder-query-data
-title: Placeholder Query Data
+title: 占位符查询数据
 ---
 
-## What is placeholder data?
+## 什么是占位符数据?
 
-Placeholder data allows a query to behave as if it already has data, similar to the `initialData` option, but **the data is not persisted to the cache**. This comes in handy for situations where you have enough partial (or fake) data to render the query successfully while the actual data is fetched in the background.
+占位符数据使查询可以像已经具有数据一样运行，类似于 `initialData` 选项，但是**数据不会持久保存到缓存中**。在你有足够的部分（或虚假）数据以成功渲染查询的情况下，这在后台获取实际数据时非常有用。
 
-> Example: An individual blog post query could pull "preview" data from a parent list of blog posts that only include title and a small snippet of the post body. You would not want to persist this partial data to the query result of the individual query, but it is useful for showing the content layout as quickly as possible while the actual query finishes to fetch the entire object.
+> 示例：单个博客文章查询可以从包含标题和文章摘要的博客文章父列表中提取“预览”数据。您不希望将此部分数据持久保存到个别查询的查询结果中，但在实际查询完成获取整个对象之前，它对于尽快显示内容布局非常有用。
 
-There are a few ways to supply placeholder data for a query to the cache before you need it:
+有几种在需要之前为查询提供占位符数据到缓存中的方法：
 
-- Declaratively:
-  - Provide `placeholderData` to a query to prepopulate its cache if empty
-- Imperatively:
-  - [Prefetch or fetch the data using `queryClient` and the `placeholderData` option](../guides/prefetching)
+- 声明式地：
+  - 为查询提供 `placeholderData` 以在缓存为空时预填充它
+- 命令式地：
+  - [使用 `queryClient` 和 `placeholderData` 选项预取或获取数据](../guides/prefetching)
 
-## Placeholder Data as a Value
+## 占位符数据作为值
 
 [//]: # 'Example'
 
@@ -33,9 +33,9 @@ function Todos() {
 [//]: # 'Example'
 [//]: # 'Memoization'
 
-### Placeholder Data Memoization
+### 占位符数据的记忆化
 
-If the process for accessing a query's placeholder data is intensive or just not something you want to perform on every render, you can memoize the value:
+如果访问查询的占位符数据的过程很复杂，或者你不想在每次渲染时执行此操作，你可以对该值进行记忆化：
 
 [//]: # 'Memoization'
 [//]: # 'Example2'
@@ -53,9 +53,9 @@ function Todos() {
 
 [//]: # 'Example2'
 
-### Placeholder Data from Cache
+### 来自缓存的占位符数据
 
-In some circumstances, you may be able to provide the placeholder data for a query from the cached result of another. A good example of this would be searching the cached data from a blog post list query for a preview version of the post, then using that as the placeholder data for your individual post query:
+在某些情况下，您可以从另一个查询的缓存结果中提供查询的占位符数据。一个很好的例子是从博客文章列表查询的缓存数据中搜索预览版本的文章，然后将其用作个别文章查询的占位符数据：
 
 [//]: # 'Example3'
 
@@ -65,8 +65,7 @@ function Todo({ blogPostId }) {
     queryKey: ['blogPost', blogPostId],
     queryFn: () => fetch(`/blogPosts/${blogPostId}`),
     placeholderData: () => {
-      // Use the smaller/preview version of the blogPost from the 'blogPosts'
-      // query as the placeholder data for this blogPost query
+      // 使用“blogPosts”查询中较小/预览版本的博客文章作为此博客文章查询的占位符数据
       return queryClient
         .getQueryData(['blogPosts'])
         ?.find((d) => d.id === blogPostId)
@@ -78,8 +77,8 @@ function Todo({ blogPostId }) {
 [//]: # 'Example3'
 [//]: # 'Materials'
 
-## Further reading
+## 进一步阅读
 
-For a comparison between `Placeholder Data` and `Initial Data`, have a look at the [Community Resources](../community/tkdodos-blog#9-placeholder-and-initial-data-in-react-query).
+有关 `占位符数据` 和 `初始数据` 的比较，请查看 [社区资源](../community/tkdodos-blog#9-placeholder-and-initial-data-in-react-query)。
 
 [//]: # 'Materials'

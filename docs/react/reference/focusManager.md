@@ -1,13 +1,13 @@
 ---
 id: FocusManager
-title: FocusManager
+title: 焦点管理器 (FocusManager)
 ---
 
-The `FocusManager` manages the focus state within TanStack Query.
+`FocusManager` 在 TanStack Query 中管理焦点状态。
 
-It can be used to change the default event listeners or to manually change the focus state.
+它可以用于更改默认的事件监听器或手动更改焦点状态。
 
-Its available methods are:
+它提供的方法有：
 
 - [`setEventListener`](#focusmanagerseteventlistener)
 - [`setFocused`](#focusmanagersetfocused)
@@ -15,20 +15,20 @@ Its available methods are:
 
 ## `focusManager.setEventListener`
 
-`setEventListener` can be used to set a custom event listener:
+`setEventListener` 可以用于设置自定义的事件监听器：
 
 ```tsx
 import { focusManager } from '@tanstack/react-query'
 
 focusManager.setEventListener(handleFocus => {
-  // Listen to visibilitychange and focus
+  // 监听 visibilitychange 和 focus 事件
   if (typeof window !== 'undefined' && window.addEventListener) {
     window.addEventListener('visibilitychange', handleFocus, false)
     window.addEventListener('focus', handleFocus, false)
   }
 
   return () => {
-    // Be sure to unsubscribe if a new handler is set
+    // 如果设置了新的处理程序，请务必取消订阅
     window.removeEventListener('visibilitychange', handleFocus)
     window.removeEventListener('focus', handleFocus)
   }
@@ -37,28 +37,28 @@ focusManager.setEventListener(handleFocus => {
 
 ## `focusManager.setFocused`
 
-`setFocused` can be used to manually set the focus state. Set `undefined` to fallback to the default focus check.
+`setFocused` 可以用于手动设置焦点状态。将 `undefined` 设置为回退到默认的焦点检查。
 
 ```tsx
 import { focusManager } from '@tanstack/react-query'
 
-// Set focused
+// 设置为有焦点
 focusManager.setFocused(true)
 
-// Set unfocused
+// 设置为无焦点
 focusManager.setFocused(false)
 
-// Fallback to the default focus check
+// 回退到默认的焦点检查
 focusManager.setFocused(undefined)
 ```
 
-**Options**
+**选项**
 
 - `focused: boolean | undefined`
 
 ## `focusManager.isFocused`
 
-`isFocused` can be used to get the current focus state.
+`isFocused` 可以用于获取当前的焦点状态。
 
 ```tsx
 const isFocused = focusManager.isFocused()

@@ -1,6 +1,6 @@
 ---
 id: dependent-queries
-title: Dependent Queries（依赖查询）
+title: Dependent Queries
 ref: docs/react/guides/dependent-queries.md
 ---
 
@@ -22,9 +22,9 @@ const enabled = computed(() => !!user.value?.id)
 const { isIdle, data: projects } = useQuery({
   queryKey: ['projects', userId],
   queryFn: () => getProjectsByUser(userId.value),
-  // The query will not execute until `enabled == true` 
+  // The query will not execute until `enabled == true`
   // 当 `enabled == true` 时，查询才会执行
-  enabled, 
+  enabled,
 })
 ```
 

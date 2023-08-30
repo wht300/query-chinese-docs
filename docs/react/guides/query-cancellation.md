@@ -1,19 +1,19 @@
 ---
 id: query-cancellation
-title: Query Cancellation
+title: 查询取消
 ---
 
-TanStack Query provides each query function with an [`AbortSignal` instance](https://developer.mozilla.org/docs/Web/API/AbortSignal), **if it's available in your runtime environment**. When a query becomes out-of-date or inactive, this `signal` will become aborted. This means that all queries are cancellable, and you can respond to the cancellation inside your query function if desired. The best part about this is that it allows you to continue to use normal async/await syntax while getting all the benefits of automatic cancellation.
+TanStack Query 为每个查询函数提供了一个[`AbortSignal` 实例](https://developer.mozilla.org/docs/Web/API/AbortSignal)，**如果在你的运行环境中可用**。当查询变得过时或不活动时，这个 `signal` 将会被中止。这意味着所有的查询都是可取消的，你可以根据需要在查询函数内部响应取消。最棒的部分在于，它允许你继续使用正常的异步/等待语法，同时获得自动取消的所有好处。
 
-The `AbortController` API is available in [most runtime environments](https://developer.mozilla.org/docs/Web/API/AbortController#browser_compatibility), but if the runtime environment does not support it then the query function will receive `undefined` in its place. You may choose to polyfill the `AbortController` API if you wish, there are [several available](https://www.npmjs.com/search?q=abortcontroller%20polyfill).
+`AbortController` API 在[大多数运行环境](https://developer.mozilla.org/docs/Web/API/AbortController#browser_compatibility)中都是可用的，但如果运行环境不支持它，则查询函数将会接收到 `undefined`。如果希望的话，你可以选择对 `AbortController` API 进行 polyfill，有[几个可用的选项](https://www.npmjs.com/search?q=abortcontroller%20polyfill)。
 
-## Default behavior
+## 默认行为
 
-By default, queries that unmount or become unused before their promises are resolved are _not_ cancelled. This means that after the promise has resolved, the resulting data will be available in the cache. This is helpful if you've started receiving a query, but then unmount the component before it finishes. If you mount the component again and the query has not been garbage collected yet, data will be available.
+默认情况下，在其承诺被解析之前卸载或不再使用的查询不会被取消。这意味着在承诺解析后，结果数据将在缓存中可用。如果你已经开始接收一个查询，然后在完成之前卸载了组件。如果再次挂载组件，且查询还没有被垃圾回收，数据将会可用。
 
-However, if you consume the `AbortSignal`, the Promise will be cancelled (e.g. aborting the fetch) and therefore, also the Query must be cancelled. Cancelling the query will result in its state being _reverted_ to its previous state.
+但是，如果你使用 `AbortSignal`，Promise 将会被取消（例如中止获取），因此查询也必须被取消。取消查询将导致其状态被 _恢复_ 到之前的状态。
 
-## Using `fetch`
+## 使用 `fetch`
 
 [//]: # 'Example'
 
@@ -22,14 +22,14 @@ const query = useQuery({
   queryKey: ['todos'],
   queryFn: async ({ signal }) => {
     const todosResponse = await fetch('/todos', {
-      // Pass the signal to one fetch
+      // 将 signal 传递给一个 fetch
       signal,
     })
     const todos = await todosResponse.json()
 
     const todoDetails = todos.map(async ({ details }) => {
       const response = await fetch(details, {
-        // Or pass it to several
+        // 或将它传递给多个 fetch
         signal,
       })
       return response.json()
@@ -42,7 +42,7 @@ const query = useQuery({
 
 [//]: # 'Example'
 
-## Using `axios` [v0.22.0+](https://github.com/axios/axios/releases/tag/v0.22.0)
+## 使用 `axios` [v0.22.0+](https://github.com/axios/axios/releases/tag/v0.22.0)
 
 [//]: # 'Example2'
 
@@ -53,7 +53,7 @@ const query = useQuery({
   queryKey: ['todos'],
   queryFn: ({ signal }) =>
     axios.get('/todos', {
-      // Pass the signal to `axios`
+      // 将 signal 传递给 `axios`
       signal,
     }),
 })
@@ -61,7 +61,7 @@ const query = useQuery({
 
 [//]: # 'Example2'
 
-### Using `axios` with version lower than v0.22.0
+### 使用版本低于 v0.22.0 的 `axios`
 
 [//]: # 'Example3'
 
@@ -71,16 +71,16 @@ import axios from 'axios'
 const query = useQuery({
   queryKey: ['todos'],
   queryFn: ({ signal }) => {
-    // Create a new CancelToken source for this request
+    // 为此请求创建一个新的 CancelToken source
     const CancelToken = axios.CancelToken
     const source = CancelToken.source()
 
     const promise = axios.get('/todos', {
-      // Pass the source token to your request
+      // 将 source token 传递给你的请求
       cancelToken: source.token,
     })
 
-    // Cancel the request if TanStack Query signals to abort
+    // 如果 TanStack Query 信号要求中止，取消请求
     signal?.addEventListener('abort', () => {
       source.cancel('Query was cancelled by TanStack Query')
     })
@@ -92,7 +92,7 @@ const query = useQuery({
 
 [//]: # 'Example3'
 
-## Using `XMLHttpRequest`
+## 使用 `XMLHttpRequest`
 
 [//]: # 'Example4'
 
@@ -118,9 +118,9 @@ const query = useQuery({
 
 [//]: # 'Example4'
 
-## Using `graphql-request`
+## 使用 `graphql-request`
 
-An `AbortSignal` can be set in the client `request` method.
+可以在客户端的 `request` 方法中设置 `AbortSignal`。
 
 [//]: # 'Example5'
 
@@ -137,9 +137,9 @@ const query = useQuery({
 
 [//]: # 'Example5'
 
-## Using `graphql-request` with version lower than v4.0.0
+## 使用版本低于 v4.0.0 的 `graphql-request`
 
-An `AbortSignal` can be set in the `GraphQLClient` constructor.
+可以在 `GraphQLClient` 构造函数中设置 `AbortSignal`。
 
 [//]: # 'Example6'
 
@@ -157,9 +157,9 @@ const query = useQuery({
 
 [//]: # 'Example6'
 
-## Manual Cancellation
+## 手动取消
 
-You might want to cancel a query manually. For example, if the request takes a long time to finish, you can allow the user to click a cancel button to stop the request. To do this, you just need to call `queryClient.cancelQueries({ queryKey })`, which will cancel the query and revert it back to its previous state. If you have consumed the `signal` passed to the query function, TanStack Query will additionally also cancel the Promise.
+你可能想要手动取消一个查询。例如，如果请求花费很长时间才能完成，你可以允许用户点击取消按钮来停止请求。要做到这一点，你只需要调用 `queryClient.cancelQueries({ queryKey })`，它会取消查询并将其恢复到之前的状态。如果已经使用了传递给查询函数的 `signal`，TanStack Query 还将取消 Promise。
 
 [//]: # 'Example7'
 
@@ -181,7 +181,7 @@ return (
       queryClient.cancelQueries({ queryKey: ['todos'] })
     }}
   >
-    Cancel
+    取消
   </button>
 )
 ```

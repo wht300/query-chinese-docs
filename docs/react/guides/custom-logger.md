@@ -1,27 +1,27 @@
 ---
 id: custom-logger
-title: Custom Logger
+title: 自定义日志记录器
 ---
 
-If you want to change how information is logged by TanStack Query, you can set a custom logger when creating a `QueryClient`.
+如果您想要更改 TanStack Query 记录信息的方式，您可以在创建 `QueryClient` 时设置自定义日志记录器。
 
 ```tsx
 const queryClient = new QueryClient({
   logger: {
     log: (...args) => {
-      // Log debugging information
+      // 记录调试信息
     },
     warn: (...args) => {
-      // Log warning
+      // 记录警告
     },
     error: (...args) => {
-      // Log error
+      // 记录错误
     },
   },
 })
 ```
 
-**Deprecated**
+**已弃用**
 
-Custom loggers have been deprecated and will be removed in the next major version.
-Logging only has an effect in development mode, where passing a custom logger is not necessary.
+自定义日志记录器已经被弃用，并将在下一个主要版本中被移除。
+日志记录仅在开发模式下生效，在那里传递自定义日志记录器是不必要的。

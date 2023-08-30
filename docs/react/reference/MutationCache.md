@@ -1,11 +1,11 @@
 ---
 id: MutationCache
-title: MutationCache
+title: 变更缓存 (MutationCache)
 ---
 
-The `MutationCache` is the storage for mutations.
+`MutationCache` 是用于存储变更的地方。
 
-**Normally, you will not interact with the MutationCache directly and instead use the `QueryClient`.**
+**通常情况下，您不会直接与 `MutationCache` 进行交互，而是使用 `QueryClient`。**
 
 ```tsx
 import { MutationCache } from '@tanstack/react-query'
@@ -20,56 +20,56 @@ const mutationCache = new MutationCache({
 })
 ```
 
-Its available methods are:
+其可用方法包括：
 
 - [`getAll`](#mutationcachegetall)
 - [`subscribe`](#mutationcachesubscribe)
 - [`clear`](#mutationcacheclear)
 
-**Options**
+**选项**
 
 - `onError?: (error: unknown, variables: unknown, context: unknown, mutation: Mutation) => Promise<unknown> | unknown`
-  - Optional
-  - This function will be called if some mutation encounters an error.
-  - If you return a Promise from it, it will be awaited
+  - 可选
+  - 当某个变更遇到错误时，将调用此函数。
+  - 如果从中返回 Promise，将等待它的完成。
 - `onSuccess?: (data: unknown, variables: unknown, context: unknown, mutation: Mutation) => Promise<unknown> | unknown`
-  - Optional
-  - This function will be called if some mutation is successful.
-  - If you return a Promise from it, it will be awaited
+  - 可选
+  - 当某个变更成功时，将调用此函数。
+  - 如果从中返回 Promise，将等待它的完成。
 - `onSettled?: (data: unknown | undefined, error: unknown | null, variables: unknown, context: unknown, mutation: Mutation) => Promise<unknown> | unknown`
-  - Optional
-  - This function will be called if some mutation is settled (either successful or errored).
-  - If you return a Promise from it, it will be awaited
+  - 可选
+  - 当某个变更已处理（成功或出错）时，将调用此函数。
+  - 如果从中返回 Promise，将等待它的完成。
 - `onMutate?: (variables: unknown, mutation: Mutation) => Promise<unknown> | unknown`
-  - Optional
-  - This function will be called before some mutation executes.
-  - If you return a Promise from it, it will be awaited
+  - 可选
+  - 在执行某个变更之前，将调用此函数。
+  - 如果从中返回 Promise，将等待它的完成。
 
-## Global callbacks
+## 全局回调
 
-The `onError`, `onSuccess`, `onSettled` and `onMutate` callbacks on the MutationCache can be used to handle these events on a global level. They are different to `defaultOptions` provided to the QueryClient because:
+`MutationCache` 上的 `onError`、`onSuccess`、`onSettled` 和 `onMutate` 回调可用于在全局级别处理这些事件。它们与提供给 `QueryClient` 的 `defaultOptions` 不同，因为：
 
-- `defaultOptions` can be overridden by each Mutation - the global callbacks will **always** be called.
-- `onMutate` does not allow returning a context value.
+- `defaultOptions` 可以被每个变更覆盖，而全局回调将**始终**被调用。
+- `onMutate` 不允许返回上下文值。
 
 ## `mutationCache.getAll`
 
-`getAll` returns all mutations within the cache.
+`getAll` 返回缓存中的所有变更。
 
-> Note: This is not typically needed for most applications, but can come in handy when needing more information about a mutation in rare scenarios
+> 注意：对于大多数应用程序来说，通常不需要这个方法，但在需要了解变更的更多信息的罕见情况下可能会有用
 
 ```tsx
 const mutations = mutationCache.getAll()
 ```
 
-**Returns**
+**返回值**
 
 - `Mutation[]`
-  - Mutation instances from the cache
+  - 来自缓存的变更实例
 
 ## `mutationCache.subscribe`
 
-The `subscribe` method can be used to subscribe to the mutation cache as a whole and be informed of safe/known updates to the cache like mutation states changing or mutations being updated, added or removed.
+`subscribe` 方法可用于订阅整个变更缓存，并在缓存更新时获得有关变更状态更改、变更被更新、添加或删除的安全/已知更新的通知。
 
 ```tsx
 const callback = event => {
@@ -79,19 +79,19 @@ const callback = event => {
 const unsubscribe = mutationCache.subscribe(callback)
 ```
 
-**Options**
+**选项**
 
 - `callback: (mutation?: MutationCacheNotifyEvent) => void`
-  - This function will be called with the mutation cache any time it is updated.
+  - 每次更新缓存时，将调用此函数并传递变更缓存。
 
-**Returns**
+**返回值**
 
 - `unsubscribe: Function => void`
-  - This function will unsubscribe the callback from the mutation cache.
+  - 此函数将取消订阅变更缓存的回调。
 
 ## `mutationCache.clear`
 
-The `clear` method can be used to clear the cache entirely and start fresh.
+`clear` 方法可用于完全清除缓存并重新开始。
 
 ```tsx
 mutationCache.clear()

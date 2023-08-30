@@ -1,6 +1,6 @@
 ---
 id: query-functions
-title: Query Functions
+title: 查询函数（Query Functions）
 ref: docs/react/guides/query-functions.md
 ---
 
@@ -12,7 +12,7 @@ const result = useQuery({
   queryFn: fetchTodoList,
 })
 
-// Access the key, status and page variables in your query function!
+// 在您的查询函数中访问 key、status 和 page 变量！
 function fetchTodoList({ queryKey }) {
   const [_key, { status, page }] = queryKey
   return new Promise()
@@ -20,3 +20,4 @@ function fetchTodoList({ queryKey }) {
 ```
 
 [//]: # 'Example4'
+```

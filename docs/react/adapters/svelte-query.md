@@ -1,7 +1,7 @@
 ---
-title: Svelte Query (Coming Soon)
+title: Svelte Query
 ---
 
-> ⚠️ This module has not yet been developed. It requires an adapter similar to `react-query` to work. We estimate the amount of code to do this is low-to-moderate, but does require familiarity with the Svelte framework. If you would like to contribute this adapter, please open a PR!
+> ⚠️ 此模块尚未开发完成。它需要类似于 `react-query` 的适配器才能正常工作。我们估计完成此工作所需的代码量是中低程度的，但需要熟悉 Svelte 框架。如果您希望贡献此适配器，请提交拉取请求（PR）！
 
-The `@tanstack/svelte-query` package offers a 1st-class API for using TanStack Query via Svelte. However, all of the primitives you receive from this API are core APIs that are shared across all of the TanStack Adapters including the Query Client, query results, query subscriptions, etc.
+`@tanstack/svelte-query` 包通过 Svelte 提供了一个一流的 API，用于使用 TanStack Query。然而，从此 API 获得的所有基本原语都是核心 API，在所有 TanStack 适配器中共享，包括 Query Client、查询结果、查询订阅等。

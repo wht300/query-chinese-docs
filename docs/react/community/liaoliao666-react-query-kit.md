@@ -3,30 +3,29 @@ id: liaoliao666-react-query-kit
 title: React Query Kit
 ---
 
-🕊️ A toolkit for ReactQuery that makes ReactQuery hooks reusable and typesafe
+🕊️ 一个用于 ReactQuery 的工具包，使 ReactQuery 钩子可重用且类型安全。
 
-## what do you benefit from it
+## 你能从中受益
 
-- Make `queryKey` strongly related with `queryFn`
-- Manage `queryKey` in a type-safe way
-- Generate a custom ReactQuery hook quickly
-- Make `queryClient`'s operations clearly associated with custom ReactQuery hooks
-- Set defaultOptions for custom ReactQuery hooks easier and clearer
+- 将 `queryKey` 与 `queryFn` 强关联
+- 以类型安全的方式管理 `queryKey`
+- 快速生成自定义的 ReactQuery hook
+- 使 `queryClient` 的操作与自定义的 ReactQuery 钩子明确关联
+- 更轻松、更清晰地为自定义的 ReactQuery 钩子设置默认选项
 
-## Installation
+## 安装
 
-This module is distributed via [NPM](https://www.npmjs.com/package/react-query-kit) and
-should be installed as one of your project's `dependencies`:
+此模块通过 [NPM](https://www.npmjs.com/package/react-query-kit) 分发，应作为项目的 `dependencies` 之一进行安装：
 
 ```bash
 $ npm i react-query-kit
-# or
+# 或者
 $ pnpm add react-query-kit
-# or
+# 或者
 $ yarn add react-query-kit
 ```
 
-## Quick start with nextjs
+## 在 nextjs 中快速开始
 
 [CodeSandbox](https://codesandbox.io/s/example-react-query-kit-nextjs-uldl88)
 
@@ -40,7 +39,7 @@ type Variables = { id: number }
 const usePost = createQuery<Response, Variables, Error>({
   primaryKey: '/posts',
   queryFn: ({ queryKey: [primaryKey, variables] }) => {
-    // primaryKey equals to '/posts'
+    // primaryKey 等于 '/posts'
     return fetch(`${primaryKey}/${variables.id}`).then(res => res.json())
   },
   suspense: true
@@ -49,7 +48,7 @@ const usePost = createQuery<Response, Variables, Error>({
 const variables = { id: 1 }
 
 export default function Page() {
-  // queryKey equals to ['/posts', { id: 1 }]
+  // queryKey 等于 ['/posts', { id: 1 }]
   const { data } = usePost({ variables, suspense: true })
 
   return (
@@ -76,4 +75,4 @@ export async function getStaticProps() {
 }
 ```
 
-Check the complete documentation on [GitHub](https://github.com/liaoliao666/react-query-kit).
+请查阅 [GitHub 上的完整文档](https://github.com/liaoliao666/react-query-kit)。

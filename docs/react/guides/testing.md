@@ -1,25 +1,25 @@
 ---
 id: testing
-title: Testing
+title: 测试
 ---
 
-React Query works by means of hooks - either the ones we offer or custom ones that wrap around them.
+React Query 通过钩子（hooks）工作 - 可以是我们提供的钩子，也可以是包裹在它们周围的自定义钩子。
 
-With React 17 or earlier, writing unit tests for these custom hooks can be done by means of the [React Hooks Testing Library](https://react-hooks-testing-library.com/) library.
+对于 React 17 或更早版本，可以使用 [React Hooks Testing Library](https://react-hooks-testing-library.com/) 库来编写这些自定义钩子的单元测试。
 
-Install this by running:
+通过以下命令安装该库：
 
 ```sh
 npm install @testing-library/react-hooks react-test-renderer --save-dev
 ```
 
-(The `react-test-renderer` library is needed as a peer dependency of `@testing-library/react-hooks`, and needs to correspond to the version of React that you are using.)
+（`react-test-renderer` 库是 `@testing-library/react-hooks` 的对等依赖项，需要与你使用的 React 版本相对应。）
 
-*Note*: when using React 18 or later, `renderHook` is available directly through the `@testing-library/react` package, and `@testing-library/react-hooks` is no longer required.
+*注意*：在使用 React 18 或更高版本时，`renderHook` 可以直接通过 `@testing-library/react` 包访问，无需再使用 `@testing-library/react-hooks`。
 
-## Our First Test
+## 我们的第一个测试
 
-Once installed, a simple test can be written. Given the following custom hook:
+安装完成后，可以编写一个简单的测试。假设有以下自定义钩子：
 
 ```tsx
 export function useCustomHook() {
@@ -27,7 +27,7 @@ export function useCustomHook() {
 }
 ```
 
-Using React 17 or earlier, we can write a test for this as follows:
+在使用 React 17 或更早版本时，我们可以如下编写测试：
 
 ```tsx
 const queryClient = new QueryClient();
@@ -44,7 +44,7 @@ await waitFor(() => result.current.isSuccess);
 expect(result.current.data).toEqual("Hello");
 ```
 
-Using React 18 or later, the semantics of `waitFor` have changed, and the above test needs to be modified as follows:
+在使用 React 18 或更高版本时，`waitFor` 的语义发生了变化，上述测试需要修改如下：
 
 ```tsx
 import { renderHook, waitFor } from "@testing-library/react";
@@ -56,19 +56,19 @@ const { result } = renderHook(() => useCustomHook(), { wrapper });
 await waitFor(() => expect(result.current.isSuccess).toBe(true));
 ```
 
-Note that we provide a custom wrapper that builds the `QueryClient` and `QueryClientProvider`. This helps to ensure that our test is completely isolated from any other tests.
+注意，我们提供了一个自定义的包装器，用于构建 `QueryClient` 和 `QueryClientProvider`。这有助于确保我们的测试与其他测试完全隔离。
 
-It is possible to write this wrapper only once, but if so we need to ensure that the `QueryClient` gets cleared before every test, and that tests don't run in parallel otherwise one test will influence the results of others.
+可以只编写这个包装器一次，但如果这样做，我们需要确保在每个测试之前清除 `QueryClient`，并且测试不要并行运行，否则一个测试会影响其他测试的结果。
 
-## Turn off retries
+## 关闭重试
 
-The library defaults to three retries with exponential backoff, which means that your tests are likely to timeout if you want to test an erroneous query. The easiest way to turn retries off is via the QueryClientProvider. Let's extend the above example:
+该库默认进行三次指数退避的重试，这意味着如果你想测试一个错误的查询，你的测试很可能会超时。最简单的关闭重试的方法是通过 `QueryClientProvider`。让我们扩展上面的示例：
 
 ```tsx
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // ✅ turns retries off
+      // ✅ 关闭重试
       retry: false,
     },
   },
@@ -80,12 +80,11 @@ const wrapper = ({ children }) => (
 );
 ```
 
-This will set the defaults for all queries in the component tree to "no retries". It is important to know that this will only work if your actual useQuery has no explicit retries set. If you have a query that wants 5 retries, this will still take precedence, because defaults are only taken as a fallback.
+这将为组件树中的所有查询设置默认值为“无重试”。重要的是要知道，只有当你的实际 `useQuery` 没有显式设置重试时，这才起作用。如果有一个要求进行 5 次重试的查询，这仍然会优先，因为默认值仅作为后备采用。
 
-## Turn off network error logging
+## 关闭网络错误日志记录
 
-When testing we want to suppress network errors being logged to the console.
-To do this, we can pass a custom logger to `QueryClient`:
+在测试时，我们希望禁止将网络错误记录到控制台中。为此，我们可以将自定义日志记录器传递给 `QueryClient`：
 
 ```tsx
 import { QueryClient } from '@tanstack/react-query'
@@ -94,23 +93,23 @@ const queryClient = new QueryClient({
   logger: {
     log: console.log,
     warn: console.warn,
-    // ✅ no more errors on the console for tests
+    // ✅ 在测试中不再在控制台上显示错误
     error: process.env.NODE_ENV === 'test' ? () => {} : console.error,
   },
 })
 ```
 
-## Set cacheTime to Infinity with Jest
+## 在 Jest 中将 cacheTime 设置为 Infinity
 
-If you use Jest, you can set the `cacheTime` to `Infinity` to prevent "Jest did not exit one second after the test run completed" error message. This is the default behavior on the server, and is only necessary to set if you are explicitly setting a `cacheTime`.
+如果你使用 Jest，可以将 `cacheTime` 设置为 `Infinity`，以避免出现“Jest 在测试运行完成后一秒钟后仍未退出”的错误消息。这是服务器的默认行为，只有在你显式设置了 `cacheTime` 的情况下才需要设置。
 
-## Testing Network Calls
+## 测试网络调用
 
-The primary use for React Query is to cache network requests, so it's important that we can test our code is making the correct network requests in the first place.
+React Query 的主要用途是缓存网络请求，因此测试代码是否正确发出网络请求非常重要。
 
-There are plenty of ways that these can be tested, but for this example we are going to use [nock](https://www.npmjs.com/package/nock).
+有很多测试这些的方法，但是在本例中，我们将使用 [nock](https://www.npmjs.com/package/nock)。
 
-Given the following custom hook:
+假设有以下自定义钩子：
 
 ```tsx
 function useFetchData() {
@@ -121,7 +120,7 @@ function useFetchData() {
 }
 ```
 
-We can write a test for this as follows:
+我们可以如下编写测试：
 
 ```tsx
 const queryClient = new QueryClient();
@@ -146,11 +145,11 @@ await waitFor(() => {
 expect(result.current.data).toEqual({answer: 42});
 ```
 
-Here we are making use of `waitFor` and waiting until the query status indicates that the request has succeeded. This way we know that our hook has finished and should have the correct data. *Note*: when using React 18, the semantics of `waitFor` have changed as noted above.
+在这里，我们使用 `waitFor` 并等待查询状态指示请求是否成功。这样我们就知道我们的钩子已经完成并且应该有正确的数据。*注意*：在使用 React 18 时，`waitFor` 的语义已经发生了变化，如上所述。
 
-## Testing Load More / Infinite Scroll
+## 测试加载更多 / 无限滚动
 
-First we need to mock our API response
+首先，我们需要模拟 API 响应：
 
 ```tsx
 function generateMockedResponse(page) {
@@ -161,8 +160,7 @@ function generateMockedResponse(page) {
 }
 ```
 
-Then, our `nock` configuration needs to differentiate responses based on the page, and we'll be using `uri` to do this.
-`uri`'s value here will be something like `"/?page=1` or `/?page=2`
+然后，我们的 `nock` 配置需要基于页面区分响应，我们将使用 `uri` 来实现。这里的 `uri` 的值将类似于 `"/?page=1"` 或 `"/?page=2"`。
 
 ```tsx
 const expectation = nock('http://example.com')
@@ -171,14 +169,16 @@ const expectation = nock('http://example.com')
   .get('/api/data')
   .reply(200, (uri) => {
     const url = new URL(`http://example.com${uri}`);
-    const { page } = Object.fromEntries(url.searchParams);
+    const { page } = Object
+
+.fromEntries(url.searchParams);
     return generateMockedResponse(page);
   });
 ```
 
-(Notice the `.persist()`, because we'll be calling from this endpoint multiple times)
+（注意 `.persist()`，因为我们将从此端点多次调用）
 
-Now we can safely run our tests, the trick here is to await for the data assertion to pass:
+现在我们可以安全地运行我们的测试，这里的技巧是等待数据断言通过：
 
 ```tsx
 const { result, waitFor } = renderHook(
@@ -202,9 +202,8 @@ await waitFor(() =>
 expectation.done();
 ```
 
-*Note*: when using React 18, the semantics of `waitFor` have changed as noted above.
+*注意*：在使用 React 18 时，`waitFor` 的语义已经发生了变化，如上所述。
 
-## Further reading
+## 进一步阅读
 
-For additional tips and an alternative setup using `mock-service-worker`, have a look at [Testing React Query](../community/tkdodos-blog#5-testing-react-query) from
-the Community Resources.
+有关额外的提示以及使用 `mock-service-worker` 的备用设置，请查看社区资源中的 [Testing React Query](../community/tkdodos-blog#5-testing-react-query)。

@@ -1,89 +1,91 @@
 ---
 id: optimistic-updates
-title: Optimistic Updates
----
+title: 乐观更新
 
-When you optimistically update your state before performing a mutation, there is a chance that the mutation will fail. In most of these failure cases, you can just trigger a refetch for your optimistic queries to revert them to their true server state. In some circumstances though, refetching may not work correctly and the mutation error could represent some type of server issue that won't make it possible to refetch. In this event, you can instead choose to rollback your update.
+当您在执行突变之前进行乐观状态更新时，有可能突变会失败。在大多数这些失败情况下，您可以只需触发乐观查询的重新提取，将其恢复为其真实的服务器状态。但在某些情况下，重新提取可能无法正常工作，突变错误可能代表一些无法重新提取的服务器问题。在这种情况下，您可以选择回滚您的更新。
 
-To do this, `useMutation`'s `onMutate` handler option allows you to return a value that will later be passed to both `onError` and `onSettled` handlers as the last argument. In most cases, it is most useful to pass a rollback function.
+要做到这一点，`useMutation`的`onMutate`处理程序选项允许您返回一个值，稍后将作为最后一个参数传递给`onError`和`onSettled`处理程序。在大多数情况下，最有用的是传递一个回滚函数。
 
-## Updating a list of todos when adding a new todo
+## 添加新任务时更新任务列表
 
 [//]: # 'Example'
 
 ```tsx
-const queryClient = useQueryClient()
+const queryClient = useQueryClient();
 
 useMutation({
   mutationFn: updateTodo,
-  // When mutate is called:
+  // 当调用 mutate 时：
   onMutate: async (newTodo) => {
-    // Cancel any outgoing refetches
-    // (so they don't overwrite our optimistic update)
-    await queryClient.cancelQueries({ queryKey: ['todos'] })
+    // 取消任何正在进行的重新提取
+    // （以便它们不会覆盖我们的乐观更新）
+    await queryClient.cancelQueries({ queryKey: ['todos'] });
 
-    // Snapshot the previous value
-    const previousTodos = queryClient.getQueryData(['todos'])
+    // 快照先前的值
+    const previousTodos = queryClient.getQueryData(['todos']);
 
-    // Optimistically update to the new value
-    queryClient.setQueryData(['todos'], (old) => [...old, newTodo])
+    // 乐观地更新为新值
+    queryClient.setQueryData(['todos'], (old) => [...old, newTodo]);
 
-    // Return a context object with the snapshotted value
-    return { previousTodos }
+    // 返回一个带有快照值的上下文对象
+    return { previousTodos };
   },
-  // If the mutation fails,
-  // use the context returned from onMutate to roll back
+  // 如果突变失败，
+  // 使用从 onMutate 返回的上下文回滚
   onError: (err, newTodo, context) => {
-    queryClient.setQueryData(['todos'], context.previousTodos)
+    queryClient.setQueryData(['todos'], context.previousTodos);
   },
-  // Always refetch after error or success:
+  // 无论出现错误还是成功，总是重新提取：
   onSettled: () => {
-    queryClient.invalidateQueries({ queryKey: ['todos'] })
+    queryClient.invalidateQueries({ queryKey: ['todos'] });
   },
-})
+});
+
+
 ```
 
 [//]: # 'Example'
 
-## Updating a single todo
+## 更新单个任务
 
 [//]: # 'Example2'
 
 ```tsx
 useMutation({
   mutationFn: updateTodo,
-  // When mutate is called:
+  // 当调用 mutate 时：
   onMutate: async (newTodo) => {
-    // Cancel any outgoing refetches
-    // (so they don't overwrite our optimistic update)
-    await queryClient.cancelQueries({ queryKey: ['todos', newTodo.id] })
+    // 取消任何正在进行的重新提取
+    // （以便它们不会覆盖我们的乐观更新）
+    await queryClient.cancelQueries({ queryKey: ['todos', newTodo.id] });
 
-    // Snapshot the previous value
-    const previousTodo = queryClient.getQueryData(['todos', newTodo.id])
+    // 快照先前的值
+    const previousTodo = queryClient.getQueryData(['todos', newTodo.id]);
 
-    // Optimistically update to the new value
-    queryClient.setQueryData(['todos', newTodo.id], newTodo)
+    // 乐观地更新为新值
+    queryClient.setQueryData(['todos', newTodo.id], newTodo);
 
-    // Return a context with the previous and new todo
-    return { previousTodo, newTodo }
+    // 返回带有先前和新任务的上下文
+    return { previousTodo, newTodo };
   },
-  // If the mutation fails, use the context we returned above
+  // 如果突变失败，使用我们上面返回的上下文
   onError: (err, newTodo, context) => {
     queryClient.setQueryData(
       ['todos', context.newTodo.id],
-      context.previousTodo,
-    )
+      context.previousTodo
+    );
   },
-  // Always refetch after error or success:
+  // 无论出现错误还是成功，总是重新提取：
   onSettled: (newTodo) => {
-    queryClient.invalidateQueries({ queryKey: ['todos', newTodo.id] })
+    queryClient.invalidateQueries({ queryKey: ['todos', newTodo.id] });
   },
-})
+});
+
 ```
 
 [//]: # 'Example2'
 
-You can also use the `onSettled` function in place of the separate `onError` and `onSuccess` handlers if you wish:
+您还可以在需要时使用 `onSettled` 函数代替单独的 `onError` 和 `onSuccess` 处理程序：
 
 [//]: # 'Example3'
 
@@ -93,10 +95,11 @@ useMutation({
   // ...
   onSettled: (newTodo, error, variables, context) => {
     if (error) {
-      // do something
+      // 做些什么
     }
   },
-})
+});
+
 ```
 
 [//]: # 'Example3'

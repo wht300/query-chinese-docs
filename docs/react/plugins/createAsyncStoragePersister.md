@@ -3,27 +3,27 @@ id: createAsyncStoragePersister
 title: createAsyncStoragePersister
 ---
 
-## Installation
+## 安装
 
-This utility comes as a separate package and is available under the `'@tanstack/query-async-storage-persister'` import.
+此实用程序作为一个独立的包提供，在 `'@tanstack/query-async-storage-persister'` 导入下可用。
 ```bash
 npm install @tanstack/query-async-storage-persister @tanstack/react-query-persist-client
 ```
-or
+或者
 ```bash
 pnpm add @tanstack/query-async-storage-persister @tanstack/react-query-persist-client
 ```
-or
+或者
 ```bash
 yarn add @tanstack/query-async-storage-persister @tanstack/react-query-persist-client
 ```
 
-## Usage
+## 使用方法
 
-- Import the `createAsyncStoragePersister` function
-- Create a new asyncStoragePersister
-  - you can pass any `storage` to it that adheres to the `AsyncStorage` interface - the example below uses the async-storage from React Native
-- Wrap your app by using [`PersistQueryClientProvider`](../plugins/persistQueryClient.md#persistqueryclientprovider) component.
+- 导入 `createAsyncStoragePersister` 函数
+- 创建一个新的 `asyncStoragePersister`
+  - 您可以将任何符合 `AsyncStorage` 接口的 `storage` 传递给它 - 下面的示例使用了 React Native 中的 async-storage
+- 使用 [`PersistQueryClientProvider`](../plugins/persistQueryClient.md#persistqueryclientprovider) 组件包装您的应用程序。
 
 ```tsx
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -55,15 +55,15 @@ const Root = () => (
 export default Root;
 ```
 
-## Retries
+## 重试
 
-Retries work the same as for a [SyncStoragePersister](../plugins/createSyncStoragePersister), except that they can also be asynchronous. You can also use all the predefined retry handlers.
+重试与 [SyncStoragePersister](../plugins/createSyncStoragePersister) 的工作方式相同，只是它们还可以是异步的。您还可以使用所有预定义的重试处理程序。
 
 ## API
 
 ### `createAsyncStoragePersister`
 
-Call this function to create an asyncStoragePersister that you can use later with `persistQueryClient`.
+调用此函数以创建一个 `asyncStoragePersister`，稍后您可以在 `persistQueryClient` 中使用。
 
 ```tsx
 createAsyncStoragePersister(options: CreateAsyncStoragePersisterOptions)
@@ -73,18 +73,18 @@ createAsyncStoragePersister(options: CreateAsyncStoragePersisterOptions)
 
 ```tsx
 interface CreateAsyncStoragePersisterOptions {
-  /** The storage client used for setting an retrieving items from cache */
+  /** 用于从缓存中设置和检索项目的存储客户端 */
   storage: AsyncStorage | undefined | null
-  /** The key to use when storing the cache to localStorage */
+  /** 在将缓存存储到本地存储时使用的键 */
   key?: string
-  /** To avoid localStorage spamming,
-   * pass a time in ms to throttle saving the cache to disk */
+  /** 为避免 localStorage 生成大量数据，
+   * 传递一个以毫秒为单位的时间来限制将缓存保存到磁盘 */
   throttleTime?: number
-  /** How to serialize the data to storage */
+  /** 如何将数据序列化到存储 */
   serialize?: (client: PersistedClient) => string
-  /** How to deserialize the data from storage */
+  /** 如何从存储中反序列化数据 */
   deserialize?: (cachedString: string) => PersistedClient
-  /** How to retry persistence on error **/
+  /** 如何在出现错误时重试持久化 **/
   retry?: AsyncPersistRetryer
 }
 
@@ -95,7 +95,7 @@ interface AsyncStorage {
 }
 ```
 
-The default options are:
+默认选项为：
 
 ```tsx
 {

@@ -1,9 +1,9 @@
 ---
 id: background-fetching-indicators
-title: Background Fetching Indicators
+title: 后台获取指示器
 ---
 
-A query's `status === 'loading'` state is sufficient enough to show the initial hard-loading state for a query, but sometimes you may want to display an additional indicator that a query is refetching in the background. To do this, queries also supply you with an `isFetching` boolean that you can use to show that it's in a fetching state, regardless of the state of the `status` variable:
+对于查询的 `status === 'loading'` 状态足以显示查询的初始加载状态，但有时您可能还想显示一个额外的指示器，表示查询正在后台重新获取。为了实现这一点，查询还提供了一个 `isFetching` 布尔值，您可以使用它来显示它正在获取状态，无论 `status` 变量的状态如何：
 
 [//]: # 'Example'
 
@@ -25,7 +25,7 @@ function Todos() {
     <span>Error: {error.message}</span>
   ) : (
     <>
-      {isFetching ? <div>Refreshing...</div> : null}
+      {isFetching ? <div>正在刷新...</div> : null}
 
       <div>
         {todos.map((todo) => (
@@ -39,9 +39,9 @@ function Todos() {
 
 [//]: # 'Example'
 
-## Displaying Global Background Fetching Loading State
+## 显示全局后台获取加载状态
 
-In addition to individual query loading states, if you would like to show a global loading indicator when **any** queries are fetching (including in the background), you can use the `useIsFetching` hook:
+除了单个查询的加载状态之外，如果您想在**任何**查询正在获取（包括在后台）时显示全局加载指示器，您可以使用 `useIsFetching` hook：
 
 [//]: # 'Example2'
 
@@ -52,7 +52,7 @@ function GlobalLoadingIndicator() {
   const isFetching = useIsFetching()
 
   return isFetching ? (
-    <div>Queries are fetching in the background...</div>
+    <div>查询正在后台获取中...</div>
   ) : null
 }
 ```

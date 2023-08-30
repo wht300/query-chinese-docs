@@ -1,11 +1,11 @@
 ---
 id: InfiniteQueryObserver
-title: InfiniteQueryObserver
+title: 无限查询观察器 (InfiniteQueryObserver)
 ---
 
 ## `InfiniteQueryObserver`
 
-The `InfiniteQueryObserver` can be used to observe and switch between infinite queries.
+`InfiniteQueryObserver` 可用于观察和在无限查询之间切换。
 
 ```tsx
 const observer = new InfiniteQueryObserver(queryClient, {
@@ -21,6 +21,6 @@ const unsubscribe = observer.subscribe(result => {
 })
 ```
 
-**Options**
+**选项**
 
-The options for the `InfiniteQueryObserver` are exactly the same as those of [`useInfiniteQuery`](../reference/useInfiniteQuery).
+`InfiniteQueryObserver` 的选项与 [`useInfiniteQuery`](../reference/useInfiniteQuery) 完全相同。

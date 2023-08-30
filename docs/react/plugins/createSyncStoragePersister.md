@@ -3,26 +3,26 @@ id: createSyncStoragePersister
 title: createSyncStoragePersister
 ---
 
-## Installation
+## 安装
 
-This utility comes as a separate package and is available under the `'@tanstack/query-sync-storage-persister'` import.
+此实用程序作为一个独立的包提供，在 `'@tanstack/query-sync-storage-persister'` 导入下可用。
 ```bash
 npm install @tanstack/query-sync-storage-persister @tanstack/react-query-persist-client
 ```
-or
+或者
 ```bash
 pnpm add @tanstack/query-sync-storage-persister @tanstack/react-query-persist-client
 ```
-or
+或者
 ```bash
 yarn add @tanstack/query-sync-storage-persister @tanstack/react-query-persist-client
 ```
 
-## Usage
+## 使用方法
 
-- Import the `createSyncStoragePersister` function
-- Create a new syncStoragePersister
-- Pass it to the [`persistQueryClient`](../plugins/persistQueryClient) function
+- 导入 `createSyncStoragePersister` 函数
+- 创建一个新的 syncStoragePersister
+- 将其传递给 [`persistQueryClient`](../plugins/persistQueryClient)
 
 ```tsx
 import { persistQueryClient } from '@tanstack/react-query-persist-client'
@@ -45,11 +45,11 @@ persistQueryClient({
 })
 ```
 
-## Retries
+## 重试
 
-Persistence can fail, e.g. if the size exceeds the available space on the storage. Errors can be handled gracefully by providing a `retry` function to the persister.
+持久化可能会失败，例如如果大小超过了存储中可用的空间。可以通过为持久化程序提供 `retry` 函数来优雅地处理错误。
 
-The retry function receives the `persistedClient` it tried to save, as well as the `error` and the `errorCount` as input. It is expected to return a _new_ `PersistedClient`, with which it tries to persist again. If _undefined_ is returned, there will be no further attempt to persist.
+retry 函数接收尝试保存的 `persistedClient`、`error` 和 `errorCount` 作为输入。它应该返回一个 _新的_ `PersistedClient`，用它再次尝试持久化。如果返回 _undefined_，则不会再次尝试持久化。
 
 ```tsx
 export type PersistRetryer = (props: {
@@ -59,12 +59,12 @@ export type PersistRetryer = (props: {
 }) => PersistedClient | undefined
 ```
 
-### Predefined strategies
+### 预定义的策略
 
-Per default, no retry will occur. You can use one of the predefined strategies to handle retries. They can be imported `from '@tanstack/react-query-persist-client'`:
+默认情况下，不会进行重试。您可以使用预定义的策略之一来处理重试。它们可以从 `from '@tanstack/react-query-persist-client'` 导入：
 
 - `removeOldestQuery`
-  - will return a new `PersistedClient` with the oldest query removed.
+  - 将返回一个新的 `PersistedClient`，其中删除了最旧的查询。
 
 ```tsx
 const localStoragePersister = createSyncStoragePersister({
@@ -77,7 +77,7 @@ const localStoragePersister = createSyncStoragePersister({
 
 ### `createSyncStoragePersister`
 
-Call this function to create a syncStoragePersister that you can use later with `persistQueryClient`.
+调用此函数以创建一个 syncStoragePersister，稍后您可以在 `persistQueryClient` 中使用。
 
 ```tsx
 createSyncStoragePersister(options: CreateSyncStoragePersisterOptions)
@@ -87,23 +87,23 @@ createSyncStoragePersister(options: CreateSyncStoragePersisterOptions)
 
 ```tsx
 interface CreateSyncStoragePersisterOptions {
-  /** The storage client used for setting an retrieving items from cache (window.localStorage or window.sessionStorage) */
+  /** 用于从缓存中设置和检索项目的存储客户端 (window.localStorage 或 window.sessionStorage) */
   storage: Storage | undefined | null
-  /** The key to use when storing the cache */
+  /** 存储缓存时要使用的键 */
   key?: string
-  /** To avoid spamming,
-   * pass a time in ms to throttle saving the cache to disk */
+  /** 为避免 spamming，
+   * 传递一个以毫秒为单位的时间来限制将缓存保存到磁盘 */
   throttleTime?: number
-  /** How to serialize the data to storage */
+  /** 如何将数据序列化到存储 */
   serialize?: (client: PersistedClient) => string
-  /** How to deserialize the data from storage */
+  /** 如何从存储中反序列化数据 */
   deserialize?: (cachedString: string) => PersistedClient
-  /** How to retry persistence on error **/
+  /** 如何在出现错误时重试持久化 **/
   retry?: PersistRetryer
 }
 ```
 
-The default options are:
+默认选项为：
 
 ```tsx
 {
@@ -114,9 +114,9 @@ The default options are:
 }
 ```
 
-#### `serialize` and `deserialize` options
-There is a limit to the amount of data which can be stored in `localStorage`.
-If you need to store more data in `localStorage`, you can override the `serialize` and `deserialize` functions to compress and decrompress the data using a library like [lz-string](https://github.com/pieroxy/lz-string/).
+#### `serialize` 和 `deserialize` 选项
+在 `localStorage` 中存储的数据量有限。
+如果需要在 `localStorage` 中存储更多数据，可以覆盖 `serialize` 和 `deserialize` 函数，使用类似 [lz-string](https://github.com/pieroxy/lz-string/) 的库对数据进行压缩和解压缩。
 
 ```tsx
 import { QueryClient } from '@tanstack/react-query';

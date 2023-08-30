@@ -1,13 +1,11 @@
 ---
 id: mutations
-title: Mutations
+title: 变更
 ---
 
-Unlike queries, mutations are typically used to create/update/delete data or perform server side-effects. For this purpose, TanStack Query exports a `useMutation` hook.
+不同于查询，变更通常用于创建/更新/删除数据或执行服务器端效果。为此，TanStack Query 导出了 `useMutation` 钩子。
 
-Here's an example of a mutation that adds a new todo to the server:
-
-[//]: # 'Example'
+以下是向服务器添加新待办事项的变更示例：
 
 ```tsx
 function App() {
@@ -20,21 +18,21 @@ function App() {
   return (
     <div>
       {mutation.isLoading ? (
-        'Adding todo...'
+        '正在添加待办事项...'
       ) : (
         <>
           {mutation.isError ? (
-            <div>An error occurred: {mutation.error.message}</div>
+            <div>发生错误：{mutation.error.message}</div>
           ) : null}
 
-          {mutation.isSuccess ? <div>Todo added!</div> : null}
+          {mutation.isSuccess ? <div>待办事项已添加！</div> : null}
 
           <button
             onClick={() => {
-              mutation.mutate({ id: new Date(), title: 'Do Laundry' })
+              mutation.mutate({ id: new Date(), title: '做洗衣' })
             }}
           >
-            Create Todo
+            创建待办事项
           </button>
         </>
       )}
@@ -43,33 +41,26 @@ function App() {
 }
 ```
 
-[//]: # 'Example'
+变更在任何给定时刻只能处于以下状态之一：
 
-A mutation can only be in one of the following states at any given moment:
+- `isIdle` 或 `status === 'idle'` - 变更当前处于空闲或新的/重置状态
+- `isLoading` 或 `status === 'loading'` - 变更正在运行
+- `isError` 或 `status === 'error'` - 变更遇到错误
+- `isSuccess` 或 `status === 'success'` - 变更成功且变更数据可用
 
-- `isIdle` or `status === 'idle'` - The mutation is currently idle or in a fresh/reset state
-- `isLoading` or `status === 'loading'` - The mutation is currently running
-- `isError` or `status === 'error'` - The mutation encountered an error
-- `isSuccess` or `status === 'success'` - The mutation was successful and mutation data is available
+除了这些主要状态外，根据变更的状态，还可以获得更多信息：
 
-Beyond those primary states, more information is available depending on the state of the mutation:
+- `error` - 如果变更处于 `error` 状态，错误将通过 `error` 属性可用。
+- `data` - 如果变更处于 `success` 状态，数据将通过 `data` 属性可用。
 
-- `error` - If the mutation is in an `error` state, the error is available via the `error` property.
-- `data` - If the mutation is in a `success` state, the data is available via the `data` property.
+在上面的示例中，您还看到可以通过使用**单个变量或对象**调用 `mutate` 函数将变量传递给变更函数。
 
-In the example above, you also saw that you can pass variables to your mutations function by calling the `mutate` function with a **single variable or object**.
+即使只是使用变量，变更也并不是特别特殊，但是当与 `onSuccess` 选项一起使用时，[查询客户端的 `invalidateQueries` 方法](../reference/QueryClient#queryclientinvalidatequeries) 和 [查询客户端的 `setQueryData` 方法](../reference/QueryClient#queryclientsetquerydata) 使变更成为一个非常强大的工具。
 
-Even with just variables, mutations aren't all that special, but when used with the `onSuccess` option, the [Query Client's `invalidateQueries` method](../reference/QueryClient#queryclientinvalidatequeries) and the [Query Client's `setQueryData` method](../reference/QueryClient#queryclientsetquerydata), mutations become a very powerful tool.
-
-[//]: # 'Info1'
-
-> IMPORTANT: The `mutate` function is an asynchronous function, which means you cannot use it directly in an event callback in **React 16 and earlier**. If you need to access the event in `onSubmit` you need to wrap `mutate` in another function. This is due to [React event pooling](https://reactjs.org/docs/legacy-event-pooling.html).
-
-[//]: # 'Info1'
-[//]: # 'Example2'
+> 重要提示：`mutate` 函数是一个异步函数，这意味着您不能在 **React 16 及之前** 的事件回调中直接使用它。如果您需要在 `onSubmit` 中访问事件，您需要将 `mutate` 包装在另一个函数中。这是由于[React 事件池](https://reactjs.org/docs/legacy-event-pooling.html)。
 
 ```tsx
-// This will not work in React 16 and earlier
+// 这在 React 16 及之前不起作用
 const CreateTodo = () => {
   const mutation = useMutation({
     mutationFn: (event) => {
@@ -81,7 +72,7 @@ const CreateTodo = () => {
   return <form onSubmit={mutation.mutate}>...</form>
 }
 
-// This will work
+// 这会起作用
 const CreateTodo = () => {
   const mutation = useMutation({
     mutationFn: (formData) => {
@@ -97,13 +88,9 @@ const CreateTodo = () => {
 }
 ```
 
-[//]: # 'Example2'
+## 重置变更状态
 
-## Resetting Mutation State
-
-It's sometimes the case that you need to clear the `error` or `data` of a mutation request. To do this, you can use the `reset` function to handle this:
-
-[//]: # 'Example3'
+有时您需要清除变更请求的 `error` 或 `data`。为此，您可以使用 `reset` 函数处理：
 
 ```tsx
 const CreateTodo = () => {
@@ -126,128 +113,109 @@ const CreateTodo = () => {
         onChange={(e) => setTitle(e.target.value)}
       />
       <br />
-      <button type="submit">Create Todo</button>
+      <button type="submit">创建待办事项</button>
     </form>
   )
 }
 ```
 
-[//]: # 'Example3'
+## 变更副作用
 
-## Mutation Side Effects
-
-`useMutation` comes with some helper options that allow quick and easy side-effects at any stage during the mutation lifecycle. These come in handy for both [invalidating and refetching queries after mutations](../guides/invalidations-from-mutations) and even [optimistic updates](../guides/optimistic-updates)
-
-[//]: # 'Example4'
+`useMutation` 配备了一些助手选项，允许在变更生命周期的任何阶段快速、轻松地执行副作用。这些对于[在变更后使查询无效和重新获取](../guides/invalidations-from-mutations)以及甚至[乐观更新](../guides/optimistic-updates)非常有用。
 
 ```tsx
 useMutation({
   mutationFn: addTodo,
   onMutate: (variables) => {
-    // A mutation is about to happen!
+    // 即将发生变更！
 
-    // Optionally return a context containing data to use when for example rolling back
+    // 可选地返回一个包含数据的上下文，以在需要时回滚
     return { id: 1 }
   },
   onError: (error, variables, context) => {
-    // An error happened!
-    console.log(`rolling back optimistic update with id ${context.id}`)
+    // 发生错误！
+    console.log(`正在回滚带有 ID ${context.id} 的乐观更新`)
   },
   onSuccess: (data, variables, context) => {
-    // Boom baby!
+    // 发生了变更！
   },
   onSettled: (data, error, variables, context) => {
-    // Error or success... doesn't matter!
+    // 无论错误还是成功... 都无所谓！
   },
 })
 ```
 
-[//]: # 'Example4'
-
-When returning a promise in any of the callback functions it will first be awaited before the next callback is called:
-
-[//]: # 'Example5'
+当在任何回调函数中返回一个 promise 时，它会在下一个回调被调用之前被等待：
 
 ```tsx
 useMutation({
   mutationFn: addTodo,
   onSuccess: async () => {
-    console.log("I'm first!")
+    console.log("我先执行！")
   },
   onSettled: async () => {
-    console.log("I'm second!")
+    console.log("我第二个执行！")
   },
 })
 ```
 
-[//]: # 'Example5'
+您可能会发现，除了在 `useMutation` 上定义的处理程序之外，您可能还希望在调用 `mutate` 后触发其他回调。这可用于触发特定于组件的副作用。为此，您可以在变更变量之后的 `mutate` 函数中提供任何相同的回调选项。支持的选项包括：`onSuccess`、`onError` 和 `onSettled`。请注意，这
 
-You might find that you want to **trigger additional callbacks** beyond the ones defined on `useMutation` when calling `mutate`. This can be used to trigger component-specific side effects. To do that, you can provide any of the same callback options to the `mutate` function after your mutation variable. Supported options include: `onSuccess`, `onError` and `onSettled`. Please keep in mind that those additional callbacks won't run if your component unmounts _before_ the mutation finishes.
-
-[//]: # 'Example6'
+些附加回调在变更完成之前，如果您的组件在变更完成之前卸载，它们将不会运行。
 
 ```tsx
 useMutation({
   mutationFn: addTodo,
   onSuccess: (data, variables, context) => {
-    // I will fire first
+    // 我会第一个触发
   },
   onError: (error, variables, context) => {
-    // I will fire first
+    // 我会第一个触发
   },
   onSettled: (data, error, variables, context) => {
-    // I will fire first
+    // 我会第一个触发
   },
 })
 
 mutate(todo, {
   onSuccess: (data, variables, context) => {
-    // I will fire second!
+    // 我会第二个触发！
   },
   onError: (error, variables, context) => {
-    // I will fire second!
+    // 我会第二个触发！
   },
   onSettled: (data, error, variables, context) => {
-    // I will fire second!
+    // 我会第二个触发！
   },
 })
 ```
 
-[//]: # 'Example6'
+### 连续变更
 
-### Consecutive mutations
+在处理连续变更时，处理 `onSuccess`、`onError` 和 `onSettled` 回调时有些差异。当传递给 `mutate` 函数时，它们将仅被触发一次，仅当组件仍然挂载时。这是因为每次调用 `mutate` 函数时，变更观察器都会被删除和重新订阅。相反，在每次调用 `mutate` 时，`useMutation` 处理程序会执行。
 
-There is a slight difference in handling `onSuccess`, `onError` and `onSettled` callbacks when it comes to consecutive mutations. When passed to the `mutate` function, they will be fired up only _once_ and only if the component is still mounted. This is due to the fact that mutation observer is removed and resubscribed every time when the `mutate` function is called. On the contrary, `useMutation` handlers execute for each `mutate` call.
-
-> Be aware that most likely, `mutationFn` passed to `useMutation` is asynchronous. In that case, the order in which mutations are fulfilled may differ from the order of `mutate` function calls.
-
-[//]: # 'Example7'
+> 请注意，很可能传递给 `useMutation` 的 `mutationFn` 是异步的。在这种情况下，变更完成的顺序可能与 `mutate` 函数调用的顺序不同。
 
 ```tsx
 useMutation({
   mutationFn: addTodo,
   onSuccess: (data, error, variables, context) => {
-    // Will be called 3 times
+    // 将调用 3 次
   },
 })
 
-[('Todo 1', 'Todo 2', 'Todo 3')].forEach((todo) => {
+[('待办事项 1', '待办事项 2', '待办事项 3')].forEach((todo) => {
   mutate(todo, {
     onSuccess: (data, error, variables, context) => {
-      // Will execute only once, for the last mutation (Todo 3),
-      // regardless which mutation resolves first
+      // 仅会执行一次，对于最后一个变更（待办事项 3），无论哪个变更首先解析
     },
   })
 })
 ```
 
-[//]: # 'Example7'
-
 ## Promises
 
-Use `mutateAsync` instead of `mutate` to get a promise which will resolve on success or throw on an error. This can for example be used to compose side effects.
-
-[//]: # 'Example8'
+使用 `mutateAsync` 代替 `mutate`，以获取在成功时解析的 promise，或在错误时抛出的 promise。例如，这可以用来组合副作用。
 
 ```tsx
 const mutation = useMutation({ mutationFn: addTodo })
@@ -258,17 +226,13 @@ try {
 } catch (error) {
   console.error(error)
 } finally {
-  console.log('done')
+  console.log('完成')
 }
 ```
 
-[//]: # 'Example8'
+## 重试
 
-## Retry
-
-By default TanStack Query will not retry a mutation on error, but it is possible with the `retry` option:
-
-[//]: # 'Example9'
+默认情况下，TanStack Query 不会在错误时重试变更，但通过 `retry` 选项可以实现重试：
 
 ```tsx
 const mutation = useMutation({
@@ -277,37 +241,33 @@ const mutation = useMutation({
 })
 ```
 
-[//]: # 'Example9'
+如果变更由于设备离线而失败，在设备重新连接时，它们将按照相同的顺序进行重试。
 
-If mutations fail because the device is offline, they will be retried in the same order when the device reconnects.
+## 持久化变更
 
-## Persist mutations
-
-Mutations can be persisted to storage if needed and resumed at a later point. This can be done with the hydration functions:
-
-[//]: # 'Example10'
+如果需要，变更可以持久化到存储中，并在以后的某个时间点恢复。这可以使用 hydration 函数来实现：
 
 ```tsx
 const queryClient = new QueryClient()
 
-// Define the "addTodo" mutation
+// 定义 "addTodo" 变更
 queryClient.setMutationDefaults(['addTodo'], {
   mutationFn: addTodo,
   onMutate: async (variables) => {
-    // Cancel current queries for the todos list
+    // 取消当前待办事项列表的查询
     await queryClient.cancelQueries({ queryKey: ['todos'] })
 
-    // Create optimistic todo
+    // 创建乐观的待办事项
     const optimisticTodo = { id: uuid(), title: variables.title }
 
-    // Add optimistic todo to todos list
+    // 将乐观的待办事项添加到待办事项列表
     queryClient.setQueryData(['todos'], (old) => [...old, optimisticTodo])
 
-    // Return context with the optimistic todo
+    // 返回带有乐观的待办事项的上下文
     return { optimisticTodo }
   },
   onSuccess: (result, variables, context) => {
-    // Replace optimistic todo in the todos list with the result
+    // 用结果替换待办事项列表中的乐观待办事项
     queryClient.setQueryData(['todos'], (old) =>
       old.map((todo) =>
         todo.id === context.optimisticTodo.id ? result : todo,
@@ -315,7 +275,7 @@ queryClient.setMutationDefaults(['addTodo'], {
     )
   },
   onError: (error, variables, context) => {
-    // Remove optimistic todo from the todos list
+    // 从待办事项列表中删除乐观待办事项
     queryClient.setQueryData(['todos'], (old) =>
       old.filter((todo) => todo.id !== context.optimisticTodo.id),
     )
@@ -323,30 +283,25 @@ queryClient.setMutationDefaults(['addTodo'], {
   retry: 3,
 })
 
-// Start mutation in some component:
+// 在某个组件中启动变更：
 const mutation = useMutation({ mutationKey: ['addTodo'] })
-mutation.mutate({ title: 'title' })
+mutation.mutate({ title: '标题' })
 
-// If the mutation has been paused because the device is for example offline,
-// Then the paused mutation can be dehydrated when the application quits:
+// 如果变更因为设备离线等原因而暂停，那么在应用程序退出时可以将暂停的变更脱水化：
 const state = dehydrate(queryClient)
 
-// The mutation can then be hydrated again when the application is started:
+// 然后，在应用程序启动时可以再次将变更水化：
 hydrate(queryClient, state)
 
-// Resume the paused mutations:
+// 恢复暂停的变更：
 queryClient.resumePausedMutations()
 ```
 
-[//]: # 'Example10'
+### 持久化离线变更
 
-### Persisting Offline mutations
+如果您使用 [persistQueryClient 插件](../plugins/persistQueryClient) 将离线变更持久化到存储中，除非您提供默认的变更函数，否则在页面重新加载时将无法恢复变更。
 
-If you persist offline mutations with the [persistQueryClient plugin](../plugins/persistQueryClient), mutations cannot be resumed when the page is reloaded unless you provide a default mutation function.
-
-This is a technical limitation. When persisting to an external storage, only the state of mutations is persisted, as functions cannot be serialized. After hydration, the component that triggers the mutation might not be mounted, so calling `resumePausedMutations` might yield an error: `No mutationFn found`.
-
-[//]: # 'Example11'
+这是技术限制。当将状态持久化到外部存储时，只持久化变更的状态，因为函数无法序列化。在水合化后，触发变更的组件可能未挂载，因此调用 `resumePausedMutations` 可能会引发错误：“找不到 mutationFn”。
 
 ```tsx
 const persister = createSyncStoragePersister({
@@ -355,12 +310,14 @@ const persister = createSyncStoragePersister({
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+      cacheTime: 1000 * 60 * 60 * 24, // 24 小时
     },
   },
 })
 
-// we need a default mutation function so that paused mutations can resume after a page reload
+// 我们需要一个默认的变更函数，以便在
+
+页面重新加载后，暂停的变更可以恢复
 queryClient.setMutationDefaults(['todos'], {
   mutationFn: ({ id, data }) => {
     return api.updateTodo(id, data)
@@ -373,7 +330,7 @@ export default function App() {
       client={queryClient}
       persistOptions={{ persister }}
       onSuccess={() => {
-        // resume mutations after initial restore from localStorage was successful
+        // 在初始从 localStorage 恢复成功后，恢复变更
         queryClient.resumePausedMutations()
       }}
     >
@@ -383,15 +340,16 @@ export default function App() {
 }
 ```
 
+
 [//]: # 'Example11'
 
-We also have an extensive [offline example](../examples/react/offline) that covers both queries and mutations.
+我们还有一个广泛的[离线示例](../examples/react/offline)，涵盖了查询和变更。
 
 [//]: # 'Materials'
 
 ## Further reading
 
-For more information about mutations, have a look at [#12: Mastering Mutations in React Query](../community/tkdodos-blog#12-mastering-mutations-in-react-query) from
-the Community Resources.
+关于变更的更多信息，请查看社区资源中的[#12：精通 React Query 中的变更](../community/tkdodos-blog#12-mastering-mutations-in-react-query)。
+
 
 [//]: # 'Materials'

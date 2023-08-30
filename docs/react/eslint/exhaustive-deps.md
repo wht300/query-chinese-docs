@@ -1,14 +1,14 @@
 ---
 id: exhaustive-deps
-title: Exhaustive dependencies for query keys
+title: 完整依赖项的查询键
 ---
 
-Query keys should be seen like a dependency array to your query function: Every variable that is used inside the queryFn should be added to the query key.
-This makes sure that queries are cached independently and that queries are refetched automatically when the variables changes.
+查询键应该被视为查询函数的依赖数组：每个在查询函数内部使用的变量都应该添加到查询键中。
+这可以确保查询被独立地缓存，并且在变量更改时自动重新获取查询。
 
-## Rule Details
+## 规则详解
 
-Examples of **incorrect** code for this rule:
+以下是此规则的错误示例代码：
 
 ```tsx
 /* eslint "@tanstack/query/exhaustive-deps": "error" */
@@ -23,8 +23,7 @@ const todoQueries = {
 }
 ```
 
-
-Examples of **correct** code for this rule:
+以下是此规则的正确示例代码：
 
 ```tsx
 useQuery({
@@ -37,11 +36,11 @@ const todoQueries = {
 }
 ```
 
-## When Not To Use It
+## 何时不使用
 
-If you don't care about the rules of the query keys, then you will not need this rule.
+如果您不关心查询键的规则，则不需要使用此规则。
 
-## Attributes
+## 属性
 
-- [x] ✅ Recommended
-- [x] 🔧 Fixable
+- [x] ✅ 推荐
+- [x] 🔧 可修复

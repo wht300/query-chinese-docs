@@ -1,9 +1,9 @@
 ---
 id: updates-from-mutation-responses
-title: Updates from Mutation Responses
+title: 来自变更响应的更新
 ---
 
-When dealing with mutations that **update** objects on the server, it's common for the new object to be automatically returned in the response of the mutation. Instead of refetching any queries for that item and wasting a network call for data we already have, we can take advantage of the object returned by the mutation function and update the existing query with the new data immediately using the [Query Client's `setQueryData`](../reference/QueryClient#queryclientsetquerydata) method:
+在处理**更新**服务器上的对象的变更时，通常在变更的响应中会自动返回新的对象。与其重新获取该项的任何查询并浪费网络调用用于我们已经拥有的数据，我们可以利用变更函数返回的对象，使用查询客户端的 [setQueryData](../reference/QueryClient#queryclientsetquerydata) 方法立即更新现有查询的新数据：
 
 [//]: # 'Example'
 ```tsx
@@ -21,8 +21,7 @@ mutation.mutate({
   name: 'Do the laundry',
 })
 
-// The query below will be updated with the response from the
-// successful mutation
+// 下面的查询将会使用成功变更的响应进行更新
 const { status, data, error } = useQuery({
   queryKey: ['todo', { id: 5 }],
   queryFn: fetchTodoById,
@@ -30,8 +29,7 @@ const { status, data, error } = useQuery({
 ```
 [//]: # 'Example'
 
-You might want to tie the `onSuccess` logic into a reusable mutation, for that you can
-create a custom hook like this:
+你可能想要将 `onSuccess` 逻辑绑定到可重用的变更中，为此，你可以创建一个像这样的自定义钩子：
 
 [//]: # 'Example2'
 ```tsx
@@ -40,7 +38,7 @@ const useMutateTodo = () => {
 
   return useMutation({
     mutationFn: editTodo,
-    // Notice the second argument is the variables object that the `mutate` function receives
+    // 注意第二个参数是 `mutate` 函数接收到的变量对象
     onSuccess: (data, variables) => {
       queryClient.setQueryData(['todo', { id: variables.id }], data)
     },
@@ -49,9 +47,9 @@ const useMutateTodo = () => {
 ```
 [//]: # 'Example2'
 
-## Immutability
+## 不可变性
 
-Updates via `setQueryData` must be performed in an _immutable_ way. **DO NOT** attempt to write directly to the cache by mutating data (that you retrieved via from the cache) in place. It might work at first but can lead to subtle bugs along the way.
+通过 `setQueryData` 进行的更新必须以 _immutable_ 的方式进行。**请勿**尝试直接通过就地突变数据（从缓存中检索的数据）来写入缓存。虽然一开始可能会起作用，但可能会导致难以察觉的错误。
 
 [//]: # 'Example3'
 ```tsx
@@ -59,18 +57,18 @@ queryClient.setQueryData(
   ['posts', { id }],
   (oldData) => {
     if (oldData) {
-      // ❌ do not try this
-      oldData.title = 'my new post title'
+      // ❌ 不要尝试这样做
+      oldData.title = '我新的帖子标题'
     }
     return oldData
   })
 
 queryClient.setQueryData(
   ['posts', { id }],
-  // ✅ this is the way
+  // ✅ 这是正确的方式
   (oldData) => oldData ? {
     ...oldData,
-    title: 'my new post title'
+    title: '我新的帖子标题'
   } : oldData
 )
 ```

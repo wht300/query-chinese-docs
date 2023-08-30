@@ -1,10 +1,10 @@
 ---
-title: Solid Query 
+title: Solid Query
 ---
 
-The `@tanstack/solid-query` package provides a 1st-class API for using TanStack Query with SolidJS. 
+`@tanstack/solid-query` 包为在 SolidJS 中使用 TanStack Query 提供了一流的 API。
 
-## Example
+## 示例
 
 ```tsx
 import { QueryClient, QueryClientProvider, createQuery } from '@tanstack/solid-query'
@@ -19,10 +19,10 @@ function Example() {
     <div>
       <Switch>
         <Match when={query.isLoading}>
-          <p>Loading...</p>
+          <p>加载中...</p>
         </Match>
         <Match when={query.isError}>
-          <p>Error: {query.error.message}</p>
+          <p>错误：{query.error.message}</p>
         </Match>
         <Match when={query.isSuccess}>
           <For each={query.data}>
@@ -41,12 +41,11 @@ function App() {
     </QueryClientProvider>
   )
 }
-
 ```
 
-## Available Functions
+## 可用函数
 
-Solid Query offers useful primitives and functions that will make managing server state in SolidJS apps easier.
+Solid Query 提供了一些实用的原语和函数，可以使在 SolidJS 应用程序中管理服务器状态更加容易。
 
 - `createQuery`
 - `createQueries`
@@ -58,24 +57,21 @@ Solid Query offers useful primitives and functions that will make managing serve
 - `QueryClient`
 - `QueryClientProvider`
 
+## Solid Query 与 React Query 之间的重要区别
 
+Solid Query 提供了类似于 React Query 的 API，但也有一些关键区别需要注意。
 
-
-## Important Differences between Solid Query & React Query
-
-Solid Query offers an API similar to  React Query, but there are some key differences to be mindful of.
-
-- To maintain their reactivity, Query keys need to be wrapped inside a function while using `createQuery`, `createQueries`, `createInfiniteQuery` and `useIsFetching`.
+- 为了保持它们的响应性，在使用 `createQuery`、`createQueries`、`createInfiniteQuery` 和 `useIsFetching` 时，查询键需要包装在一个函数内。
 
 ```tsx
-// ❌ react version
+// ❌ React 版本
 useQuery(["todos", todo], fetchTodos)
 
-// ✅ solid version
+// ✅ Solid 版本
 createQuery(() => ["todos", todo()], fetchTodos)
 ```
 
-- Suspense works for queries out of the box if you access the query data inside a `<Suspense>` boundary.
+- 如果你在 `<Suspense>` 边界内访问查询数据，悬停（Suspense）会自动工作。
 
 ```tsx
 import { For, Suspense } from 'solid-js'
@@ -84,18 +80,18 @@ function Example() {
   const query = createQuery(() => ['todos'], fetchTodos)
   return (
     <div>
-      {/* ✅ Will trigger loading fallback, data accessed in a suspense context. */}
-      <Suspense fallback={"Loading..."}>
+      {/* ✅ 将触发加载回退，数据在 suspense 上下文中访问。 */}
+      <Suspense fallback={"加载中..."}>
         <For each={query.data}>{(todo) => <div>{todo.title}</div>}</For>
       </Suspense>
-      {/* ❌ Will not trigger loading fallback, data not accessed in a suspense context. */}
+      {/* ❌ 不会触发加载回退，数据不在 suspense 上下文中访问。 */}
       <For each={query.data}>{(todo) => <div>{todo.title}</div>}</For>
     </div>
   )
 }
 ```
 
-- Solid Query primitives (`createX`) do not support destructuring. The return value from these functions is a store, and their properties are only tracked in a reactive context.
+- Solid Query 原语（`createX`）不支持解构。从这些函数返回的值是一个 store，在响应性上下文中才会被追踪。
 
 ```tsx
 import { QueryClient, QueryClientProvider, createQuery } from '@tanstack/solid-query'
@@ -112,14 +108,14 @@ export default function App() {
 }
 
 function Example() {
-  // ❌ react version -- supports destructing outside reactive context
+  // ❌ React 版本-- 支持在响应性上下文之外进行解构
   // const { isLoading, error, data } = useQuery(['repoData'], () =>
   //   fetch('https://api.github.com/repos/tannerlinsley/react-query').then(res =>
   //     res.json()
   //   )
   // )
 
-  // ✅ solid version -- does not support destructuring outside reactive context
+  // ✅ Solid 版本-- 在响应性上下文之外不支持解构
   const query = createQuery(
     () => ['repoData'],
     () =>
@@ -128,11 +124,11 @@ function Example() {
       ),
   )
 
-  // ✅ access query properties in JSX reactive context
+  // ✅ 在 JSX 响应性上下文中访问查询属性
   return (
     <Switch>
-      <Match when={query.isLoading}>Loading...</Match>
-      <Match when={query.isError}>Error: {query.error.message}</Match>
+      <Match when={query.isLoading}>加载中...</Match>
+      <Match when={query.isError}>错误：{query.error.message}</Match>
       <Match when={query.isSuccess}>
         <div>
           <h1>{query.data.name}</h1>
@@ -147,7 +143,7 @@ function Example() {
 }
 ```
 
-- If you want options to be reactive you need to pass them using object getter syntax. This may look strange at first but it leads to more idiomatic solid code.
+- 如果你希望选项是响应性的，你需要使用对象获取器语法将它们传递。这一开始可能看起来有些奇怪，但它会导致更符合 Solid 代码习惯的代码。
 
 ```tsx
 import {
@@ -162,10 +158,10 @@ const queryClient = new QueryClient()
 function Example() {
   const [enabled, setEnabled] = createSignal(false)
   const query = createQuery(() => ['todos'], fetchTodos, {
-    // ❌ passing a signal directly is not reactive
+    // ❌ 直接传递一个 signal 是不会响应的
     // enabled: enabled(),
 
-    // ✅ passing a function that returns a signal is reactive
+    // ✅ 传递返回 signal 的函数是响应的
     get enabled() {
       return enabled()
     },
@@ -175,10 +171,10 @@ function Example() {
     <div>
       <Switch>
         <Match when={query.isLoading}>
-          <p>Loading...</p>
+          <p>加载中...</p>
         </Match>
         <Match when={query.isError}>
-          <p>Error: {query.error.message}</p>
+          <p>错误：{query.error.message}</p>
         </Match>
         <Match when={query.isSuccess}>
           <For each={query.data}>
@@ -186,7 +182,7 @@ function Example() {
           </For>
         </Match>
       </Switch>
-      <button onClick={() => setEnabled(!enabled())}>Toggle enabled</button>
+      <button onClick={() => setEnabled(!enabled())}>切换启用状态</button>
     </div>
   )
 }
@@ -200,6 +196,8 @@ function App() {
 }
 ```
 
-- Errors can be caught and reset using SolidJS' native `ErrorBoundary` component. `QueryErrorResetBoundary` is not needed with Solid Query
+- 错误可以通过 SolidJS 的本机 `ErrorBoundary` 组件捕获和重置。Solid Query 不需要 `QueryErrorResetBoundary`。
 
-- Since Property tracking is handled through Solid's fine grained reactivity, options like `notifyOnChangeProps` are not needed
+- 由于属性跟踪是通过 Solid 的精细粒度响应性来处理的，因此不需要像 `notifyOnChangeProps`
+
+这样的选项。

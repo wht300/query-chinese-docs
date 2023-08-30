@@ -1,19 +1,19 @@
 ---
 id: broadcastQueryClient
-title: broadcastQueryClient (Experimental)
+title: broadcastQueryClient（实验性功能）
 ---
 
-> VERY IMPORTANT: This utility is currently in an experimental stage. This means that breaking changes will happen in minor AND patch releases. Use at your own risk. If you choose to rely on this in production in an experimental stage, please lock your version to a patch-level version to avoid unexpected breakages.
+> 非常重要：此实用程序目前处于实验阶段。这意味着在次要和补丁版本中会发生重大更改。请自行决定是否使用。如果您选择在实验阶段在生产中依赖此功能，请将版本锁定为补丁级别版本，以避免意外的中断。
 
-`broadcastQueryClient` is a utility for broadcasting and syncing the state of your queryClient between browser tabs/windows with the same origin.
+`broadcastQueryClient` 是一个用于在具有相同源的浏览器选项卡/窗口之间广播和同步查询客户端状态的实用程序。
 
-## Installation
+## 安装
 
-This utility comes as a separate package and is available under the `'@tanstack/query-broadcast-client-experimental'` import.
+此实用程序作为一个独立的包提供，在 `'@tanstack/query-broadcast-client-experimental'` 导入下可用。
 
-## Usage
+## 使用方法
 
-Import the `broadcastQueryClient` function, and pass it your `QueryClient` instance, and optionally, set a `broadcastChannel`.
+导入 `broadcastQueryClient` 函数，将其传递给您的 `QueryClient` 实例，还可以设置一个 `broadcastChannel`。
 
 ```tsx
 import { broadcastQueryClient } from '@tanstack/query-broadcast-client-experimental'
@@ -30,27 +30,26 @@ broadcastQueryClient({
 
 ### `broadcastQueryClient`
 
-Pass this function a `QueryClient` instance and optionally, a `broadcastChannel`.
+将一个 `QueryClient` 实例和可选的 `broadcastChannel` 传递给此函数。
 
 ```tsx
 broadcastQueryClient({ queryClient, broadcastChannel })
 ```
 
-### `Options`
+### `选项`
 
-An object of options:
+一个选项对象：
 
 ```tsx
 interface broadcastQueryClient {
-  /** The QueryClient to sync */
+  /** 要同步的 QueryClient */
   queryClient: QueryClient
-  /** This is the unique channel name that will be used
-   * to communicate between tabs and windows */
+  /** 这是用于在选项卡和窗口之间进行通信的唯一通道名称 */
   broadcastChannel?: string
 }
 ```
 
-The default options are:
+默认选项为：
 
 ```tsx
 {

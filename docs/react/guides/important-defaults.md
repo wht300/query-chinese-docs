@@ -1,44 +1,40 @@
 ---
 id: important-defaults
-title: Important Defaults
----
+title: 重要默认设置
 
-Out of the box, TanStack Query is configured with **aggressive but sane** defaults. **Sometimes these defaults can catch new users off guard or make learning/debugging difficult if they are unknown by the user.** Keep them in mind as you continue to learn and use TanStack Query:
+TanStack Query 在初始情况下配置了**积极但合理**的默认值。**有时这些默认值可能会让新用户感到困惑，或者如果用户不知道这些默认值，可能会使学习和调试变得困难。** 当您继续学习和使用 TanStack Query 时，请牢记这些默认值：
 
-- Query instances via `useQuery` or `useInfiniteQuery` by default **consider cached data as stale**.
+- 通过 `useQuery` 或 `useInfiniteQuery` 获取的查询实例默认**将缓存的数据视为陈旧**。
 
-> To change this behavior, you can configure your queries both globally and per-query using the `staleTime` option. Specifying a longer `staleTime` means queries will not refetch their data as often
+> 要更改此行为，可以使用 `staleTime` 选项在全局和每个查询上进行配置。指定较长的 `staleTime` 表示查询不会频繁地重新获取数据。
 
-- Stale queries are refetched automatically in the background when:
-  - New instances of the query mount
-  - The window is refocused
-  - The network is reconnected
-  - The query is optionally configured with a refetch interval
+- 在以下情况下，陈旧的查询会在后台自动重新获取：
+- 查询的新实例挂载
+- 窗口重新获得焦点
+- 网络重新连接
+- 查询选择性地配置了重新获取间隔
 
-If you see a refetch that you are not expecting, it is likely because you just focused the window and TanStack Query is doing a [`refetchOnWindowFocus`](../guides/window-focus-refetching). During development, this will probably be triggered more frequently, especially because focusing between the Browser DevTools and your app will also cause a fetch, so be aware of that.
+如果您看到一个意外的重新获取，很可能是因为您刚刚将窗口聚焦，而 TanStack Query 正在执行[`refetchOnWindowFocus`](../guides/window-focus-refetching)。在开发过程中，这可能会更频繁地触发，特别是因为在浏览器开发工具和您的应用程序之间切换焦点也会导致获取，所以请注意。
 
-> To change this functionality, you can use options like `refetchOnMount`, `refetchOnWindowFocus`, `refetchOnReconnect` and `refetchInterval`.
+> 要更改此功能，您可以使用 `refetchOnMount`、`refetchOnWindowFocus`、`refetchOnReconnect` 和 `refetchInterval` 等选项。
 
-- Query results that have no more active instances of `useQuery`, `useInfiniteQuery` or query observers are labeled as "inactive" and remain in the cache in case they are used again at a later time.
-- By default, "inactive" queries are garbage collected after **5 minutes**.
+- 查询结果如果没有更多的 `useQuery`、`useInfiniteQuery` 实例或查询观察者，将被标记为"非活动"，并在缓存中保留，以防将来再次使用。
 
-  > To change this, you can alter the default `cacheTime` for queries to something other than `1000 * 60 * 5` milliseconds.
+- 默认情况下，"非活动" 查询在**5分钟**后被垃圾回收。
 
-- Queries that fail are **silently retried 3 times, with exponential backoff delay** before capturing and displaying an error to the UI.
+> 要更改这个设置，您可以将默认的查询 `cacheTime` 改为不是 `1000 * 60 * 5` 毫秒的其他值。
 
-  > To change this, you can alter the default `retry` and `retryDelay` options for queries to something other than `3` and the default exponential backoff function.
+- 默认情况下，查询失败会进行**静默重试 3 次，具有指数回退延迟**，然后才会捕获并显示错误给 UI。
 
-- Query results by default are **structurally shared to detect if data has actually changed** and if not, **the data reference remains unchanged** to better help with value stabilization with regards to useMemo and useCallback. If this concept sounds foreign, then don't worry about it! 99.9% of the time you will not need to disable this and it makes your app more performant at zero cost to you.
+> 要更改此设置，您可以将查询的默认 `retry` 和 `retryDelay` 选项改为 `3` 和默认的指数回退函数以外的其他值。
 
-  > Structural sharing only works with JSON-compatible values, any other value types will always be considered as changed. If you are seeing performance issues because of large responses for example, you can disable this feature with the `config.structuralSharing` flag. If you are dealing with non-JSON compatible values in your query responses and still want to detect if data has changed or not, you can define a data compare function with `config.isDataEqual` or provide your own custom function as `config.structuralSharing` to compute a value from the old and new responses, retaining references as required.
+- 默认情况下，查询结果**通过结构共享来检测数据是否实际改变**，如果没有改变，**数据引用保持不变**，以更好地支持 `useMemo` 和 `useCallback` 的值稳定性。如果这个概念听起来很陌生，那就不必担心！在99.9%的情况下，您不需要禁用它，它可以在没有成本的情况下提高您的应用性能。
 
-[//]: # 'Materials'
+> 结构共享仅适用于与 JSON 兼容的值，任何其他值类型都将始终被视为已更改。如果由于大型响应等原因导致性能问题，您可以通过 `config.structuralSharing` 标志禁用此功能。如果您在查询响应中处理非 JSON 兼容值，并且仍然想检测数据是否已更改，您可以使用 `config.isDataEqual` 定义数据比较函数，或者将自定义函数作为 `config.structuralSharing` 提供，以从旧响应和新响应中计算一个值，根据需要保留引用。
 
-## Further Reading
+## 进一步阅读
 
-Have a look at the following articles from our Community Resources for further explanations of the defaults:
+请查阅以下社区资源中的文章，以获取有关这些默认值的进一步解释：
 
-- [Practical React Query](../community/tkdodos-blog#1-practical-react-query)
-- [React Query as a State Manager](../community/tkdodos-blog#10-react-query-as-a-state-manager)
-
-[//]: # 'Materials'
+- [实用的 React Query](../community/tkdodos-blog#1-practical-react-query)
+- [将 React Query 作为状态管理器](../community/tkdodos-blog#10-react-query-as-a-state-manager)

@@ -1,6 +1,6 @@
 ---
 id: background-fetching-indicators
-title: Background Fetching Indicators（后台获取指示器）
+title: 后台获取指示器
 ref: docs/react/guides/background-fetching-indicators.md
 ---
 
@@ -17,10 +17,10 @@ const { isLoading, isFetching, isError, data, error } = useQuery({
 </script>
 
 <template>
-  <div v-if="isFetching">Refreshing...</div>
-  <span v-if="isLoading">Loading...</span>
-  <span v-else-if="isError">Error: {{ error.message }}</span>
-  <!-- We can assume by this point that `isSuccess === true` -->
+  <div v-if="isFetching">刷新中...</div>
+  <span v-if="isLoading">加载中...</span>
+  <span v-else-if="isError">错误：{{ error.message }}</span>
+  <!-- 我们可以假定在这一点上 `isSuccess === true` -->
   <ul v-else-if="data">
     <li v-for="todo in data" :key="todo.id">{{ todo.title }}</li>
   </ul>
@@ -38,8 +38,9 @@ const isFetching = useIsFetching()
 </script>
 
 <template>
-  <div v-if="isFetching">Queries are fetching in the background...</div>
+  <div v-if="isFetching">查询正在后台获取中...</div>
 </template>
 ```
 
 [//]: # 'Example2'
+```

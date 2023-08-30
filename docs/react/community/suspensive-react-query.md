@@ -1,29 +1,29 @@
 ---
 id: suspensive-react-query
-title: Suspensive React Query
+title: 悬停式 React Query 中文翻译
 ---
 
-Typesafe useQuery, useQueries, useInfiniteQuery with default suspense option.
+使用类型安全的 useQuery、useQueries、useInfiniteQuery，并附带默认 suspense 选项。
 
-Use @suspensive/react-query, delegate loading and error handling to the outside of the component with [useSuspenseQuery](https://suspensive.org/docs/react-query/src/useSuspenseQuery.i18n), [useSuspenseQueries](https://suspensive.org/docs/react-query/src/useSuspenseQueries.i18n) and [useSuspenseInfiniteQuery](https://suspensive.org/docs/react-query/src/useSuspenseInfiniteQuery.i18n), and focus on success inside the component.
+使用 @suspensive/react-query，将加载和错误处理的委托从组件的内部移至外部，通过 [useSuspenseQuery](https://suspensive.org/docs/react-query/src/useSuspenseQuery.i18n)、[useSuspenseQueries](https://suspensive.org/docs/react-query/src/useSuspenseQueries.i18n) 和 [useSuspenseInfiniteQuery](https://suspensive.org/docs/react-query/src/useSuspenseInfiniteQuery.i18n)，并专注于组件内的成功。
 
-You don't even need to use the isSuccess flag.
+你甚至不需要使用 isSuccess 标志。
 
-## Installation
+## 安装
 
-You can install @suspensive/react-query via [NPM](https://www.npmjs.com/package/@suspensive/react-query).
+你可以通过 [NPM](https://www.npmjs.com/package/@suspensive/react-query) 安装 @suspensive/react-query。
 
 ```bash
 $ npm i @suspensive/react-query
-# or
+# 或者
 $ pnpm add @suspensive/react-query
-# or
+# 或者
 $ yarn add @suspensive/react-query
 ```
 
-### Motivation
+### 动机
 
-If you turn suspense mode on in @tanstack/react-query, You can use useQuery with Suspense and ErrorBoundary.
+如果在 @tanstack/react-query 中打开了 suspense 模式，你可以在 Suspense 和 ErrorBoundary 中使用 useQuery。
 
 ```tsx
 import { useQuery } from '@tanstack/react-query'
@@ -43,16 +43,15 @@ const Example = () => {
 }
 ```
 
-Typically query.data will be `TData | undefined` like this code example.
-But actual useQuery's return type:query.data will be always fulfilled because of [Suspense](https://suspensive.org/docs/react/src/Suspense.i18n) and [ErrorBoundary](https://suspensive.org/docs/react/src/ErrorBoundary.i18n) as parent of this component.
+通常情况下，query.data 会像上面的代码示例一样是 `TData | undefined`。但实际上 useQuery 的返回类型 query.data 会始终被填充，因为它的父组件是 [Suspense](https://suspensive.org/docs/react/src/Suspense.i18n) 和 [ErrorBoundary](https://suspensive.org/docs/react/src/ErrorBoundary.i18n)。
 
-This is why @suspensive/react-query provide **useSuspenseQuery**
+这就是为什么 @suspensive/react-query 提供了 **useSuspenseQuery**
 
 ## useSuspenseQuery
 
-Return type of this hook have no isLoading, isError property. because Suspense and ErrorBoundary will guarantee this hook's data.
+这个钩子的返回类型没有 isLoading、isError 属性，因为 Suspense 和 ErrorBoundary 会保证这个钩子的数据。
 
-In addition, this hook's options have default suspense: true. and you can provide new options to this hook like useQuery of @tanstack/react-query.
+此外，这个钩子的选项有默认的 suspense: true。你可以像 @tanstack/react-query 的 useQuery 一样为这个钩子提供新的选项。
 
 ```tsx
 import { useSuspenseQuery } from '@suspensive/react-query'
@@ -61,17 +60,17 @@ const Example = () => {
   const query = useSuspenseQuery({
     queryKey,
     queryFn,
-  }) // suspense:true is default.
+  }) // suspense:true 是默认值。
 
-  // No need to do type narrowing by isSuccess
+  // 不需要通过 isSuccess 进行类型缩小
   query.data // TData
 }
 ```
 
-### Concentrate on only Success
+### 专注于成功
 
-Now, we can concentrate component as any fetching will be always success in component.
+现在，我们可以将组件的注意力集中在只有在组件中始终成功的任何获取上。
 
-### More Information
+### 更多信息
 
-Check the complete documentation on [Suspensive Official Docs Site](https://suspensive.org/) and also welcome Pull Request on [Suspensive GitHub](https://github.com/suspensive/react)
+请查阅 [Suspensive 官方文档网站](https://suspensive.org/) 的完整文档，同时欢迎在 [Suspensive GitHub](https://github.com/suspensive/react) 上进行 Pull Request。

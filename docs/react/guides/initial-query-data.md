@@ -1,23 +1,23 @@
 ---
 id: initial-query-data
-title: Initial Query Data
+title: 初始查询数据
 ---
 
-There are many ways to supply initial data for a query to the cache before you need it:
+在你需要之前，有许多方法可以为查询提供初始数据以填充缓存：
 
-- Declaratively:
-  - Provide `initialData` to a query to prepopulate its cache if empty
-- Imperatively:
-  - [Prefetch the data using `queryClient.prefetchQuery`](../guides/prefetching)
-  - [Manually place the data into the cache using `queryClient.setQueryData`](../guides/prefetching)
+- 声明式：
+  - 为查询提供`initialData`以在缓存为空时预填充它
+- 命令式：
+  - [使用`queryClient.prefetchQuery`预取数据](../guides/prefetching)
+  - [使用`queryClient.setQueryData`手动将数据放入缓存](../guides/prefetching)
 
-## Using `initialData` to prepopulate a query
+## 使用`initialData`预填充查询
 
-There may be times when you already have the initial data for a query available in your app and can simply provide it directly to your query. If and when this is the case, you can use the `config.initialData` option to set the initial data for a query and skip the initial loading state!
+在你的应用程序中可能会有一些时间，你已经拥有了查询所需的初始数据，可以直接提供给你的查询。如果是这种情况，你可以使用`config.initialData`选项来设置查询的初始数据，并跳过初始加载状态！
 
-> IMPORTANT: `initialData` is persisted to the cache, so it is not recommended to provide placeholder, partial or incomplete data to this option and instead use `placeholderData`
+> 重要提示：`initialData`被持久保存到缓存中，因此不建议为此选项提供占位符、部分或不完整的数据，而应使用`placeholderData`
 
-[//]: # 'Example'
+[//]: # '示例'
 
 ```tsx
 const result = useQuery({
@@ -27,18 +27,18 @@ const result = useQuery({
 })
 ```
 
-[//]: # 'Example'
+[//]: # '示例'
 
-### `staleTime` and `initialDataUpdatedAt`
+### `staleTime`和`initialDataUpdatedAt`
 
-By default, `initialData` is treated as totally fresh, as if it were just fetched. This also means that it will affect how it is interpreted by the `staleTime` option.
+默认情况下，`initialData`被视为完全新鲜，就像刚刚获取的一样。这也意味着它将影响到`staleTime`选项的解释。
 
-- If you configure your query observer with `initialData`, and no `staleTime` (the default `staleTime: 0`), the query will immediately refetch when it mounts:
+- 如果你使用`initialData`配置查询观察器，并且没有`staleTime`（默认`staleTime: 0`），则查询在挂载时将立即重新获取：
 
-  [//]: # 'Example2'
+  [//]: # '示例2'
 
   ```tsx
-  // Will show initialTodos immediately, but also immediately refetch todos after mount
+  // 将立即显示initialTodos，但在挂载后立即重新获取todos
   const result = useQuery({
     queryKey: ['todos'],
     queryFn: () => fetch('/todos'),
@@ -46,14 +46,14 @@ By default, `initialData` is treated as totally fresh, as if it were just fetche
   })
   ```
 
-  [//]: # 'Example2'
+  [//]: # '示例2'
 
-- If you configure your query observer with `initialData` and a `staleTime` of `1000` ms, the data will be considered fresh for that same amount of time, as if it was just fetched from your query function.
+- 如果你使用`initialData`配置查询观察器，并且`staleTime`为`1000`毫秒，则数据将被认为在同样的时间内是新鲜的，就像它刚刚从查询函数获取的一样。
 
-  [//]: # 'Example3'
+  [//]: # '示例3'
 
   ```tsx
-  // Show initialTodos immediately, but won't refetch until another interaction event is encountered after 1000 ms
+  // 将立即显示initialTodos，但在1000毫秒后遇到另一个交互事件之前不会重新获取
   const result = useQuery({
     queryKey: ['todos'],
     queryFn: () => fetch('/todos'),
@@ -62,35 +62,35 @@ By default, `initialData` is treated as totally fresh, as if it were just fetche
   })
   ```
 
-  [//]: # 'Example3'
+  [//]: # '示例3'
 
-- So what if your `initialData` isn't totally fresh? That leaves us with the last configuration that is actually the most accurate and uses an option called `initialDataUpdatedAt`. This option allows you to pass a numeric JS timestamp in milliseconds of when the initialData itself was last updated, e.g. what `Date.now()` provides. Take note that if you have a unix timestamp, you'll need to convert it to a JS timestamp by multiplying it by `1000`.
+- 那么如果你的`initialData`不是完全新鲜的呢？这就留下了最后一个配置，实际上是最准确的配置，它使用了一个称为`initialDataUpdatedAt`的选项。此选项允许你传递一个数值型JS时间戳（以毫秒为单位），表示initialData自上次更新以来的时间，例如`Date.now()`提供的内容。请注意，如果你有一个Unix时间戳，你需要将它乘以`1000`转换为JS时间戳。
 
-  [//]: # 'Example4'
+  [//]: # '示例4'
 
   ```tsx
-  // Show initialTodos immediately, but won't refetch until another interaction event is encountered after 1000 ms
+  // 将立即显示initialTodos，但在1000毫秒后遇到另一个交互事件之前不会重新获取
   const result = useQuery({
     queryKey: ['todos'],
     queryFn: () => fetch('/todos'),
     initialData: initialTodos,
-    staleTime: 60 * 1000, // 1 minute
-    // This could be 10 seconds ago or 10 minutes ago
-    initialDataUpdatedAt: initialTodosUpdatedTimestamp, // eg. 1608412420052
+    staleTime: 60 * 1000, // 1分钟
+    // 这可以是10秒钟前或10分钟前
+    initialDataUpdatedAt: initialTodosUpdatedTimestamp, // 例如 1608412420052
   })
   ```
 
-  [//]: # 'Example4'
+  [//]: # '示例4'
 
-  This option allows the staleTime to be used for its original purpose, determining how fresh the data needs to be, while also allowing the data to be refetched on mount if the `initialData` is older than the `staleTime`. In the example above, our data needs to be fresh within 1 minute, and we can hint to the query when the initialData was last updated so the query can decide for itself whether the data needs to be refetched again or not.
+  此选项允许staleTime用于其原始目的，确定数据需要多新鲜，同时也允许在initialData旧于staleTime的情况下在挂载时重新获取数据。在上面的示例中，我们的数据需要在1分钟内保持新鲜，我们可以向查询提供提示，initialData上次更新的时间，以便查询可以自行决定是否需要再次重新获取数据。
 
-  > If you would rather treat your data as **prefetched data**, we recommend that you use the `prefetchQuery` or `fetchQuery` APIs to populate the cache beforehand, thus letting you configure your `staleTime` independently from your initialData
+  > 如果你更愿意将数据视为**预取数据**，我们建议你使用`prefetchQuery`或`fetchQuery` API预先填充缓存，从而可以将`staleTime`与initialData独立配置
 
-### Initial Data Function
+### 初始数据函数
 
-If the process for accessing a query's initial data is intensive or just not something you want to perform on every render, you can pass a function as the `initialData` value. This function will be executed only once when the query is initialized, saving you precious memory and/or CPU:
+如果访问查询的初始数据的过程很复杂，或者你不想在每次渲染时执行它，你可以将函数作为`initialData`的值传递。此函数仅在查询初始化时执行一次，节省宝贵的内存和/或CPU：
 
-[//]: # 'Example5'
+[//]: # '示例5'
 
 ```tsx
 const result = useQuery({
@@ -100,32 +100,34 @@ const result = useQuery({
 })
 ```
 
-[//]: # 'Example5'
+[//]: # '示例5'
 
-### Initial Data from Cache
+### 来自缓存的初始数据
 
-In some circumstances, you may be able to provide the initial data for a query from the cached result of another. A good example of this would be searching the cached data from a todos list query for an individual todo item, then using that as the initial data for your individual todo query:
+在某些情况下，你可以从另一个查询的缓存结果中提供查询的初始数据。这种情况的一个很好的例子是从待办事项列表查询的缓存数据中搜索单个待办事项，然后将其作为个别待办事项查询的初始数据：
 
-[//]: # 'Example6'
+[//]: # '示例6'
 
 ```tsx
 const result = useQuery({
   queryKey: ['todo', todoId],
   queryFn: () => fetch('/todos'),
   initialData: () => {
-    // Use a todo from the 'todos' query as the initial data for this todo query
+    // 使用'todos'查询中的待办事项作为此待办事项查询的初始数据
     return queryClient.getQueryData(['todos'])?.find((d) => d.id === todoId)
   },
 })
 ```
 
-[//]: # 'Example6'
+[//]: # '示例6'
 
-### Initial Data from the cache with `initialDataUpdatedAt`
+### 带有`initialDataUpdatedAt`的来自缓存的初始数据
 
-Getting initial data from the cache means the source query you're using to look up the initial data from is likely old, but `initialData`. Instead of using an artificial `staleTime` to keep your query from refetching immediately, it's suggested that you pass the source query's `dataUpdatedAt` to `initialDataUpdatedAt`. This provides the query instance with all the information it needs to determine if and when the query needs to be refetched, regardless of initial data being provided.
+从缓存中
 
-[//]: # 'Example7'
+获取初始数据意味着你用来查找初始数据的源查询可能是旧的，但是`initialData`不是。不建议使用人工的`staleTime`来阻止查询立即重新获取，而是建议将源查询的`dataUpdatedAt`传递给`initialDataUpdatedAt`。这为查询实例提供了决定是否以及何时重新获取查询的所有所需信息，而不考虑是否提供了初始数据。
+
+[//]: # '示例7'
 
 ```tsx
 const result = useQuery({
@@ -138,38 +140,38 @@ const result = useQuery({
 })
 ```
 
-[//]: # 'Example7'
+[//]: # '示例7'
 
-### Conditional Initial Data from Cache
+### 来自缓存的条件初始数据
 
-If the source query you're using to look up the initial data from is old, you may not want to use the cached data at all and just fetch from the server. To make this decision easier, you can use the `queryClient.getQueryState` method instead to get more information about the source query, including a `state.dataUpdatedAt` timestamp you can use to decide if the query is "fresh" enough for your needs:
+如果你用来查找初始数据的源查询是旧的，你可能不想使用缓存数据，只想从服务器获取数据。为了更轻松地做出这个决定，你可以使用`queryClient.getQueryState`方法，以获取有关源查询的更多信息，包括可以用于判断查询是否足够“新鲜”的`state.dataUpdatedAt`时间戳：
 
-[//]: # 'Example8'
+[//]: # '示例8'
 
 ```tsx
 const result = useQuery({
   queryKey: ['todo', todoId],
   queryFn: () => fetch(`/todos/${todoId}`),
   initialData: () => {
-    // Get the query state
+    // 获取查询状态
     const state = queryClient.getQueryState(['todos'])
 
-    // If the query exists and has data that is no older than 10 seconds...
+    // 如果查询存在，并且数据不早于10秒钟之前...
     if (state && Date.now() - state.dataUpdatedAt <= 10 * 1000) {
-      // return the individual todo
+      // 返回个别待办事项
       return state.data.find((d) => d.id === todoId)
     }
 
-    // Otherwise, return undefined and let it fetch from a hard loading state!
+    // 否则，返回undefined，让它从硬加载状态重新获取！
   },
 })
 ```
 
-[//]: # 'Example8'
+[//]: # '示例8'
 [//]: # 'Materials'
 
-## Further reading
+## 进一步阅读
 
-For a comparison between `Initial Data` and `Placeholder Data`, have a look at the [Community Resources](../community/tkdodos-blog#9-placeholder-and-initial-data-in-react-query).
+要了解“初始数据”和“占位符数据”的比较，请查看[社区资源](../community/tkdodos-blog#9-placeholder-and-initial-data-in-react-query)。
 
 [//]: # 'Materials'
