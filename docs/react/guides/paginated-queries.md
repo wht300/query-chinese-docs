@@ -1,6 +1,7 @@
 ---
 id: paginated-queries
 title: 分页查询 / 滞后查询
+---
 
 在 UI 设计中，呈现分页数据是一种非常常见的模式。在 TanStack Query 中，通过在查询键中包含页面信息，它可以“自动工作”：
 

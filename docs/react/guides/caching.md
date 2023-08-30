@@ -1,4 +1,4 @@
- ---
+---
 id: caching
 title: 缓存示例
 ---
