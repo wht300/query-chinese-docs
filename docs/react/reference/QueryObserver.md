@@ -1,11 +1,11 @@
 ---
 id: QueryObserver
-title: QueryObserver
+title: 查询观察器
 ---
 
 ## `QueryObserver`
 
-The `QueryObserver` can be used to observe and switch between queries.
+`QueryObserver` 可用于观察和在查询之间进行切换。
 
 ```tsx
 const observer = new QueryObserver(queryClient, { queryKey: ['posts'] })
@@ -16,6 +16,6 @@ const unsubscribe = observer.subscribe(result => {
 })
 ```
 
-**Options**
+**选项**
 
-The options for the `QueryObserver` are exactly the same as those of [`useQuery`](../reference/useQuery).
+`QueryObserver` 的选项与 [`useQuery`](../reference/useQuery) 的选项完全相同。

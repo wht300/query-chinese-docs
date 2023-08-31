@@ -21,51 +21,49 @@ const {
 })
 ```
 
-**Options**
+**选项**
 
-The options for `useInfiniteQuery` are identical to the [`useQuery` hook](../reference/useQuery) with the addition of the following:
+`useInfiniteQuery` 的选项与 [`useQuery` 钩子](../reference/useQuery) 完全相同，并额外添加了以下内容：
 
 - `queryFn: (context: QueryFunctionContext) => Promise<TData>`
-  - **Required, but only if no default query function has been defined** [`defaultQueryFn`](../guides/default-query-function)
-  - The function that the query will use to request data.
-  - Receives a [QueryFunctionContext](../guides/query-functions#queryfunctioncontext)
-  - Must return a promise that will either resolve data or throw an error.
-  - Make sure you return the data *and* the `pageParam` if needed for use in the props below.
+  - **必填，但仅在未定义默认查询函数 [`defaultQueryFn`](../guides/default-query-function) 时需要**
+  - 查询将用来请求数据的函数。
+  - 接收一个 [QueryFunctionContext](../guides/query-functions#queryfunctioncontext)
+  - 必须返回一个 promise，该 promise 将解析数据或抛出错误。
+  - 确保在需要在下面的 props 中使用时返回数据和 `pageParam`。
 - `getNextPageParam: (lastPage, allPages) => unknown | undefined`
-  - When new data is received for this query, this function receives both the last page of the infinite list of data and the full array of all pages.
-  - It should return a **single variable** that will be passed as the last optional parameter to your query function.
-  - Return `undefined` to indicate there is no next page available.
+  - 当收到此查询的新数据时，此函数会同时接收无限数据列表的最后一页和所有页面的完整数组。
+  - 它应该返回一个**单一变量**，该变量将作为传递给查询函数的最后一个可选参数。
+  - 返回 `undefined` 表示没有可用的下一页。
 - `getPreviousPageParam: (firstPage, allPages) => unknown | undefined`
-  - When new data is received for this query, this function receives both the first page of the infinite list of data and the full array of all pages.
-  - It should return a **single variable** that will be passed as the last optional parameter to your query function.
-  - Return `undefined` to indicate there is no previous page available.
+  - 当收到此查询的新数据时，此函数会同时接收无限数据列表的第一页和所有页面的完整数组。
+  - 它应该返回一个**单一变量**，该变量将作为传递给查询函数的最后一个可选参数。
+  - 返回 `undefined` 表示没有可用的上一页。
 
-**Returns**
+**返回值**
 
-The returned properties for `useInfiniteQuery` are identical to the [`useQuery` hook](../reference/useQuery), with the addition of the following and a small difference in `isRefetching`:
+`useInfiniteQuery` 的返回属性与 [`useQuery` 钩子](../reference/useQuery) 的返回值完全相同，此外还添加了以下内容，并且在 `isRefetching` 上有轻微差别：
 
 - `data.pages: TData[]`
-  - Array containing all pages.
+  - 包含所有页面的数组。
 - `data.pageParams: unknown[]`
-  - Array containing all page params.
+  - 包含所有页面参数的数组。
 - `isFetchingNextPage: boolean`
-  - Will be `true` while fetching the next page with `fetchNextPage`.
+  - 在使用 `fetchNextPage` 获取下一页时为 `true`。
 - `isFetchingPreviousPage: boolean`
-  - Will be `true` while fetching the previous page with `fetchPreviousPage`.
+  - 在使用 `fetchPreviousPage` 获取上一页时为 `true`。
 - `fetchNextPage: (options?: FetchNextPageOptions) => Promise<UseInfiniteQueryResult>`
-  - This function allows you to fetch the next "page" of results.
-  - `options.pageParam: unknown` allows you to manually specify a page param instead of using `getNextPageParam`.
-  - `options.cancelRefetch: boolean` if set to `true`, calling `fetchNextPage` repeatedly will invoke `fetchPage` every time, whether the previous
-  invocation has resolved or not. Also, the result from previous invocations will be ignored. If set to `false`, calling `fetchNextPage`
-  repeatedly won't have any effect until the first invocation has resolved. Default is `true`.
+  - 此函数允许你获取下一页的结果。
+  - `options.pageParam: unknown` 允许你手动指定页面参数，而不是使用 `getNextPageParam`。
+  - `options.cancelRefetch: boolean` 如果设置为 `true`，重复调用 `fetchNextPage` 将每次都调用 `fetchPage`，无论前一次调用是否已解析。同时，前一次调用的结果将被忽略。如果设置为 `false`，重复调用 `fetchNextPage` 将不会有任何效果，直到第一次调用已解决。默认为 `true`。
 - `fetchPreviousPage: (options?: FetchPreviousPageOptions) => Promise<UseInfiniteQueryResult>`
-  - This function allows you to fetch the previous "page" of results.
-  - `options.pageParam: unknown` allows you to manually specify a page param instead of using `getPreviousPageParam`.
-  - `options.cancelRefetch: boolean` same as for `fetchNextPage`.
+  - 此函数允许你获取上一页的结果。
+  - `options.pageParam: unknown` 允许你手动指定页面参数，而不是使用 `getPreviousPageParam`。
+  - `options.cancelRefetch: boolean` 与 `fetchNextPage` 相同。
 - `hasNextPage: boolean`
-  - This will be `true` if there is a next page to be fetched (known via the `getNextPageParam` option).
+  - 如果有下一页需要获取（通过 `getNextPageParam` 选项判断），将为 `true`。
 - `hasPreviousPage: boolean`
-  - This will be `true` if there is a previous page to be fetched (known via the `getPreviousPageParam` option).
+  - 如果有上一页需要获取（通过 `getPreviousPageParam` 选项判断），将为 `true`。
 - `isRefetching: boolean`
-  - Is `true` whenever a background refetch is in-flight, which _does not_ include initial `loading` or fetching of next or previous page
-  - Is the same as `isFetching && !isLoading && !isFetchingNextPage && !isFetchingPreviousPage`
+  - 在进行后台重新获取时为 `true`，这不包括初始的 `loading`，以及获取下一页或上一页的情况。
+  - 与 `isFetching && !isLoading && !isFetchingNextPage && !isFetchingPreviousPage` 相同。

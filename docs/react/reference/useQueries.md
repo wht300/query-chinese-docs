@@ -1,28 +1,28 @@
 ---
 id: useQueries
-title: useQueries
+title: useQueries 使用方法
 ---
 
-The `useQueries` hook can be used to fetch a variable number of queries:
+`useQueries` 钩子可用于获取多个不定数量的查询：
 
 ```tsx
 const results = useQueries({
   queries: [
-    { queryKey: ['post', 1], queryFn: fetchPost, staleTime: Infinity},
-    { queryKey: ['post', 2], queryFn: fetchPost, staleTime: Infinity}
+    { queryKey: ['post', 1], queryFn: fetchPost, staleTime: Infinity },
+    { queryKey: ['post', 2], queryFn: fetchPost, staleTime: Infinity }
   ]
 })
 ```
 
-**Options**
+**选项**
 
-The `useQueries` hook accepts an options object with a **queries** key whose value is an array with query option objects identical to the [`useQuery` hook](../reference/useQuery) (excluding the `context` option).
+`useQueries` 钩子接受一个选项对象，其中包含一个 **queries** 键，其值是一个数组，数组中的每个元素都是与 [`useQuery` 钩子](../reference/useQuery) 相同的查询选项对象（不包括 `context` 选项）。
 
 - `context?: React.Context<QueryClient | undefined>`
-  - Use this to use a custom React Query context. Otherwise, `defaultContext` will be used.
+  - 可以使用此选项来使用自定义的 React Query 上下文。否则，将使用 `defaultContext`。
 
-> Having the same query key more than once in the array of query objects may cause some data to be shared between queries, e.g. when using `placeholderData` and `select`. To avoid this, consider de-duplicating the queries and map the results back to the desired structure.
+> 在查询对象数组中多次使用相同的查询键可能会导致某些数据在查询之间共享，例如在使用 `placeholderData` 和 `select` 时。为避免这种情况，考虑对查询进行去重，并将结果映射回所需的结构。
 
-**Returns**
+**返回结果**
 
-The `useQueries` hook returns an array with all the query results. The order returned is the same as the input order.
+`useQueries` 钩子返回一个包含所有查询结果的数组。返回的顺序与输入顺序相同。

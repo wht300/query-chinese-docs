@@ -1,9 +1,9 @@
 ---
 id: QueryClientProvider
-title: QueryClientProvider
+title: 查询客户端提供者
 ---
 
-Use the `QueryClientProvider` component to connect and provide a `QueryClient` to your application:
+使用 `QueryClientProvider` 组件来连接并向你的应用程序提供一个 `QueryClient`：
 
 ```tsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -15,14 +15,14 @@ function App() {
 }
 ```
 
-**Options**
+**选项**
 
 - `client: QueryClient`
-  - **Required**
-  - the QueryClient instance to provide
+  - **必填**
+  - 要提供的 QueryClient 实例
 - `contextSharing: boolean`
-  - **Deprecated**
-  - defaults to `false`
-  - Set this to `true` to enable context sharing, which will share the first and at least one instance of the context across the window to ensure that if React Query is used across different bundles or microfrontends they will all use the same **instance** of context, regardless of module scoping.
+  - **已弃用**
+  - 默认为 `false`
+  - 将其设置为 `true` 以启用上下文共享，这将在整个窗口中共享上下文的第一个和至少一个实例，以确保如果在不同的捆绑包或微前端中使用 React Query，则所有捆绑包或微前端都将使用同一个上下下文的**实例**，而不考虑模块范围。
 - `context?: React.Context<QueryClient | undefined>`
-  - Use this to use a custom React Query context. Otherwise, `defaultContext` will be used.
+  - 使用此选项使用自定义的 React Query 上下文。否则，将使用 `defaultContext`。

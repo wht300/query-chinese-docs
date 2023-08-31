@@ -1,11 +1,11 @@
 ---
 id: QueriesObserver
-title: QueriesObserver
+title: 查询观察器 (QueriesObserver)
 ---
 
 ## `QueriesObserver`
 
-The `QueriesObserver` can be used to observe multiple queries.
+`QueriesObserver` 可用于观察多个查询。
 
 ```tsx
 const observer = new QueriesObserver(queryClient, [
@@ -19,6 +19,6 @@ const unsubscribe = observer.subscribe(result => {
 })
 ```
 
-**Options**
+**选项**
 
-The options for the `QueriesObserver` are exactly the same as those of [`useQueries`](../reference/useQueries).
+`QueriesObserver` 的选项与 [`useQueries`](../reference/useQueries) 的选项完全相同。

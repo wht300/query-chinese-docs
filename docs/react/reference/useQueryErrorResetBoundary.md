@@ -3,7 +3,7 @@ id: useQueryErrorResetBoundary
 title: useQueryErrorResetBoundary
 ---
 
-This hook will reset any query errors within the closest `QueryErrorResetBoundary`. If there is no boundary defined it will reset them globally:
+这个钩子将在最近的 `QueryErrorResetBoundary` 内部重置任何查询错误。如果没有定义边界，它将在全局范围内重置它们：
 
 ```tsx
 import { useQueryErrorResetBoundary } from '@tanstack/react-query'
@@ -16,8 +16,8 @@ const App: React.FC = () => {
       onReset={reset}
       fallbackRender={({ resetErrorBoundary }) => (
         <div>
-          There was an error!
-          <Button onClick={() => resetErrorBoundary()}>Try again</Button>
+          出现了错误！
+          <Button onClick={() => resetErrorBoundary()}>重试</Button>
         </div>
       )}
     >

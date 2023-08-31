@@ -3,23 +3,23 @@ id: useIsMutating
 title: useIsMutating
 ---
 
-`useIsMutating` is an optional hook that returns the `number` of mutations that your application is fetching (useful for app-wide loading indicators).
+`useIsMutating` 是一个可选的钩子，它返回你的应用程序正在获取的突变（mutation）的数量（适用于应用程序范围的加载指示器）。
 
 ```tsx
 import { useIsMutating } from '@tanstack/react-query'
-// How many mutations are fetching?
+// 有多少个突变正在获取？
 const isMutating = useIsMutating()
-// How many mutations matching the posts prefix are fetching?
+// 有多少个与“posts”前缀匹配的突变正在获取？
 const isMutatingPosts = useIsMutating({ mutationKey: ['posts'] })
 ```
 
-**Options**
+**选项**
 
-- `filters?: MutationFilters`: [Mutation Filters](../guides/filters#mutation-filters)
+- `filters?: MutationFilters`：[突变过滤器](../guides/filters#mutation-filters)
 - `context?: React.Context<QueryClient | undefined>`
-  - Use this to use a custom React Query context. Otherwise, `defaultContext` will be used.
+  - 使用此选项使用自定义的 React Query 上下文。否则，将使用 `defaultContext`。
 
-**Returns**
+**返回值**
 
 - `isMutating: number`
-  - Will be the `number` of the mutations that your application is currently fetching.
+  - 将是你的应用程序当前正在获取的突变数量。

@@ -1,13 +1,13 @@
 ---
 id: OnlineManager
-title: OnlineManager
+title: 在线状态管理器 (OnlineManager)
 ---
 
-The `OnlineManager` manages the online state within TanStack Query.
+`OnlineManager` 在 TanStack Query 中管理在线状态。
 
-It can be used to change the default event listeners or to manually change the online state.
+它可以用于更改默认的事件监听器或手动更改在线状态。
 
-Its available methods are:
+它的可用方法包括：
 
 - [`setEventListener`](#onlinemanagerseteventlistener)
 - [`setOnline`](#onlinemanagersetonline)
@@ -15,7 +15,7 @@ Its available methods are:
 
 ## `onlineManager.setEventListener`
 
-`setEventListener` can be used to set a custom event listener:
+`setEventListener` 可用于设置自定义事件监听器：
 
 ```tsx
 import NetInfo from '@react-native-community/netinfo'
@@ -30,28 +30,28 @@ onlineManager.setEventListener(setOnline => {
 
 ## `onlineManager.setOnline`
 
-`setOnline` can be used to manually set the online state. Set `undefined` to fallback to the default online check.
+`setOnline` 可以用于手动设置在线状态。将值设为 `undefined` 以回退到默认的在线检查。
 
 ```tsx
 import { onlineManager } from '@tanstack/react-query'
 
-// Set to online
+// 设置为在线状态
 onlineManager.setOnline(true)
 
-// Set to offline
+// 设置为离线状态
 onlineManager.setOnline(false)
 
-// Fallback to the default online check
+// 回退到默认的在线检查
 onlineManager.setOnline(undefined)
 ```
 
-**Options**
+**选项**
 
 - `online: boolean | undefined`
 
 ## `onlineManager.isOnline`
 
-`isOnline` can be used to get the current online state.
+`isOnline` 可以用于获取当前的在线状态。
 
 ```tsx
 const isOnline = onlineManager.isOnline()

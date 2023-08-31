@@ -1,9 +1,9 @@
 ---
 id: QueryErrorResetBoundary
-title: QueryErrorResetBoundary
+title: 查询错误重置边界
 ---
 
-When using **suspense** or **useErrorBoundaries** in your queries, you need a way to let queries know that you want to try again when re-rendering after some error occurred. With the `QueryErrorResetBoundary` component you can reset any query errors within the boundaries of the component.
+当在你的查询中使用**悬挂**（suspense）或**useErrorBoundaries**时，你需要一种方法来让查询知道在重新渲染后要尝试再次请求，以解决一些错误。通过 `QueryErrorResetBoundary` 组件，你可以在组件边界内重置任何查询错误。
 
 ```tsx
 import { QueryErrorResetBoundary } from '@tanstack/react-query'
@@ -16,8 +16,8 @@ const App: React.FC = () => (
         onReset={reset}
         fallbackRender={({ resetErrorBoundary }) => (
           <div>
-            There was an error!
-            <Button onClick={() => resetErrorBoundary()}>Try again</Button>
+            出现了一个错误！
+            <Button onClick={() => resetErrorBoundary()}>重试</Button>
           </div>
         )}
       >

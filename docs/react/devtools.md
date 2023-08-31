@@ -1,109 +1,107 @@
 ---
 id: devtools
-title: Devtools
+title: 开发者工具 (Devtools)
 ---
 
-Wave your hands in the air and shout hooray because React Query comes with dedicated devtools! 🥳
+挥动你的手臂，欢呼雀跃，因为 React Query 自带了专用的开发者工具！ 🥳
 
-When you begin your React Query journey, you'll want these devtools by your side. They help visualize all of the inner workings of React Query and will likely save you hours of debugging if you find yourself in a pinch!
+当你开始使用 React Query 的旅程时，你肯定会想要使用这些开发者工具。它们有助于可视化 React Query 的所有内部工作原理，如果你在紧要关头遇到问题，它们很可能会为你节省大量的调试时间！
 
-> Please note that for now, the devtools **do not support React Native**. If you would like to help us make the devtools platform agnostic, please let us know!
+> 请注意，目前开发者工具**不支持 React Native**。如果你想帮助我们使开发者工具具备平台无关性，请告诉我们！
 
-> Also note that you can use these devtools to observe queries, but **not mutations**
+> 另请注意，你可以使用这些开发者工具来观察查询，但**无法观察变更操作(mutation)**。
 
-## Install and Import the Devtools
+## 安装和引入开发者工具
 
-The devtools are a separate package that you need to install:
+开发者工具是一个独立的包，你需要安装它：
 
 ```bash
 $ npm i @tanstack/react-query-devtools
-# or
+# 或者
 $ pnpm add @tanstack/react-query-devtools
-# or
+# 或者
 $ yarn add @tanstack/react-query-devtools
 ```
 
-You can import the devtools like this:
+你可以像这样引入开发者工具：
 
 ```tsx
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 ```
 
-By default, React Query Devtools are only included in bundles when `process.env.NODE_ENV === 'development'`, so you don't need to worry about excluding them during a production build.
+默认情况下，React Query Devtools 仅在 `process.env.NODE_ENV === 'development'` 时包含在捆绑包中，因此在生产构建时无需担心排除它们。
 
-## Floating Mode
+## 悬浮模式
 
-Floating Mode will mount the devtools as a fixed, floating element in your app and provide a toggle in the corner of the screen to show and hide the devtools. This toggle state will be stored and remembered in localStorage across reloads.
+悬浮模式将开发者工具作为一个固定的浮动元素挂载在你的应用中，并在屏幕角落提供一个切换按钮来显示和隐藏开发者工具。此切换状态将在重新加载时存储并在本地存储中保留。
 
-Place the following code as high in your React app as you can. The closer it is to the root of the page, the better it will work!
+将以下代码放置在你的 React 应用程序中的尽可能高的位置。它离页面的根部越近，它的效果就会越好！
 
 ```tsx
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      {/* The rest of your application */}
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  )
+return (
+<QueryClientProvider client={queryClient}>
+{/* 其他应用程序内容 */}
+<ReactQueryDevtools initialIsOpen={false} />
+</QueryClientProvider>
+)
 }
 ```
 
-### Options
+### 选项
 
 - `initialIsOpen: Boolean`
-  - Set this `true` if you want the dev tools to default to being open
+- 如果希望开发工具默认为打开状态，请将其设置为 `true`。
 - `panelProps: PropsObject`
-  - Use this to add props to the panel. For example, you can add `className`, `style` (merge and override default style), etc.
+- 使用此选项向面板添加 props。例如，你可以添加 `className`、`style`（合并和覆盖默认样式）等。
 - `closeButtonProps: PropsObject`
-  - Use this to add props to the close button. For example, you can add `className`, `style` (merge and override default style), `onClick` (extend default handler), etc.
+- 使用此选项向关闭按钮添加 props。例如，你可以添加 `className`、`style`（合并和覆盖默认样式）、`onClick`（扩展默认处理程序）等。
 - `toggleButtonProps: PropsObject`
-  - Use this to add props to the toggle button. For example, you can add `className`, `style` (merge and override default style), `onClick` (extend default handler), etc.
+- 使用此选项向切换按钮添加 props。例如，你可以添加 `className`、`style`（合并和覆盖默认样式）、`onClick`（扩展默认处理程序）等。
 - `position?: "top-left" | "top-right" | "bottom-left" | "bottom-right"`
-  - Defaults to `bottom-left`
-  - The position of the React Query logo to open and close the devtools panel
+- 默认为 `bottom-left`
+- React Query 标志的位置，用于打开和关闭开发者工具面板。
 - `panelPosition?: "top" | "bottom" | "left" | "right"`
-  - Defaults to `bottom`
-  - The position of the React Query devtools panel
+- 默认为 `bottom`
+- React Query 开发者工具面板的位置。
 - `context?: React.Context<QueryClient | undefined>`
-  - Use this to use a custom React Query context. Otherwise, `defaultContext` will be used.
-- `errorTypes?: { name: string; initializer: (query: Query) => { toString(): string }}`
-  - Use this to predefine some errors that can be triggered on your queries. Initializer will be called (with the specific query) when that error is toggled on from the UI. It must return an item that can be stringified so we can check for it's presence on any given query.
+- 使用此选项来使用自定义的 React Query 上下文。否则，将使用 `defaultContext`。
 
-## Embedded Mode
+## 嵌入模式
 
-Embedded Mode will embed the devtools as a regular component in your application. You can style it however you'd like after that!
+嵌入模式将开发者工具作为应用程序中的常规组件嵌入其中。然后，你可以按照你喜欢的方式对其进行样式设置！
 
 ```tsx
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 
 function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      {/* The rest of your application */}
-      <ReactQueryDevtoolsPanel style={styles} className={className} />
-    </QueryClientProvider>
-  )
+return (
+<QueryClientProvider client={queryClient}>
+{/* 其他应用程序内容 */}
+<ReactQueryDevtoolsPanel style={styles} className={className} />
+</QueryClientProvider>
+)
 }
 ```
 
-### Options
+### 选项
 
-Use these options to style the dev tools.
+使用这些选项来样式化开发工具。
 
 - `style: StyleObject`
-  - The standard React style object used to style a component with inline styles
+- 用于使用内联样式样式化组件的标准 React 样式对象
 - `className: string`
-  - The standard React className property used to style a component with classes
+- 用于使用类样式样式化组件的标准 React className 属性
 - `showCloseButton?: boolean`
-  - Show a close button inside the devtools panel
+- 在开发者工具面板内显示关闭按钮
 - `closeButtonProps: PropsObject`
-  - Use this to add props to the close button. For example, you can add `className`, `style` (merge and override default style), `onClick` (extend default handler), etc.
+- 使用此选项向关闭按钮添加 props。例如，你可以添加 `className`、`style`（合并和覆盖默认样式）、`onClick`（扩展默认处理程序）等。
 
-## Devtools in production
+## 生产环境中的开发者工具
 
-Devtools are excluded in production builds. However, it might be desirable to lazy load the devtools in production:
+开发者工具在生产构建中被排除在外。然而，在生产环境中延迟加载开发者工具可能是可取的：
 
 ```tsx
 import * as React from 'react'
@@ -114,49 +112,51 @@ import { Example } from './Example'
 const queryClient = new QueryClient()
 
 const ReactQueryDevtoolsProduction = React.lazy(() =>
-  import('@tanstack/react-query-devtools/build/lib/index.prod.js').then(
-    (d) => ({
-      default: d.ReactQueryDevtools,
-    }),
-  ),
+import('@tanstack/react-query-devtools/build/lib/index.prod.js').then(
+(d) => ({
+default: d.ReactQueryDevtools,
+}),
+),
 )
 
 function App() {
-  const [showDevtools, setShowDevtools] = React.useState(false)
+const [showDevtools, setShowDevtools] = React.useState(false)
 
-  React.useEffect(() => {
-    // @ts-ignore
-    window.toggleDevtools = () => setShowDevtools((old) => !old)
-  }, [])
+React.useEffect(() => {
+// @ts-ignore
+window.toggleDevtools = () => setShowDevtools((old) => !old)
+}, [])
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Example />
-      <ReactQueryDevtools initialIsOpen />
-      {showDevtools && (
-        <React.Suspense fallback={null}>
-          <ReactQueryDevtoolsProduction />
-        </React.Suspense>
-      )}
-    </QueryClientProvider>
-  )
+return (
+<QueryClientProvider client={queryClient}>
+<Example />
+<ReactQueryDevtools initialIsOpen />
+{showDevtools && (
+<React.Suspense fallback={null}>
+<ReactQueryDevtoolsProduction />
+</React.Suspense>
+)}
+</QueryClientProvider>
+)
 }
 
 export default App
 ```
 
-With this, calling `window.toggleDevtools()` will download the devtools bundle and show them.
+这样，调用 `window.toggleDevtools
 
-### Modern bundlers
+()` 将下载开发者工具包并显示它们。
 
-If your bundler supports package exports, you can use the following import path:
+### 现代捆绑工具
+
+如果你的捆绑工具支持包导出（package exports），你可以使用以下导入路径：
 
 ```tsx
 const ReactQueryDevtoolsProduction = React.lazy(() =>
-  import('@tanstack/react-query-devtools/production').then((d) => ({
-    default: d.ReactQueryDevtools,
-  })),
+import('@tanstack/react-query-devtools/production').then((d) => ({
+default: d.ReactQueryDevtools,
+})),
 )
 ```
 
-For TypeScript, you would need to set `moduleResolution: 'nodenext'` in your tsconfig, which requires at least TypeScript v4.7.
+对于 TypeScript，你需要在 tsconfig 中设置 `moduleResolution: 'nodenext'`，这至少需要 TypeScript v4.7。
