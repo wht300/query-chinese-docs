@@ -46,6 +46,8 @@ interface broadcastQueryClient {
   queryClient: QueryClient
   /** 这是用于在选项卡和窗口之间进行通信的唯一通道名称 */
   broadcastChannel?: string
+  /** Options for the BroadcastChannel API */
+  options?: BroadcastChannelOptions
 }
 ```
 

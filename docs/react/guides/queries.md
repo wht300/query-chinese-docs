@@ -1,18 +1,18 @@
 ---
 id: queries
-title: 查询（Queries）
+title: Queries
 ---
 
-## 查询基础
+## Query Basics
 
-查询是对异步数据源的声明性依赖，与一个**唯一键（unique key）**相关联。查询可以与任何基于 Promise 的方法（包括 GET 和 POST 方法）一起使用，以从服务器获取数据。如果你的方法在服务器上修改数据，我们建议使用[变更（Mutations）](../guides/mutations)。
+A query is a declarative dependency on an asynchronous source of data that is tied to a **unique key**. A query can be used with any Promise based method (including GET and POST methods) to fetch data from a server. If your method modifies data on the server, we recommend using [Mutations](../guides/mutations) instead.
 
-要在你的组件或自定义钩子中订阅一个查询，至少调用 `useQuery` 钩子时需要：
+To subscribe to a query in your components or custom hooks, call the `useQuery` hook with at least:
 
-- 一个**查询的唯一键**
-- 一个返回 Promise 的函数，该函数：
-- 解析数据，或者
-- 抛出一个错误
+- A **unique key for the query**
+- A function that returns a promise that:
+  - Resolves the data, or
+  - Throws an error
 
 [//]: # 'Example'
 
@@ -20,15 +20,15 @@ title: 查询（Queries）
 import { useQuery } from '@tanstack/react-query'
 
 function App() {
-const info = useQuery({ queryKey: ['todos'], queryFn: fetchTodoList })
+  const info = useQuery({ queryKey: ['todos'], queryFn: fetchTodoList })
 }
 ```
 
 [//]: # 'Example'
 
-你提供的**唯一键**在内部用于重新获取、缓存和在整个应用程序中共享你的查询。
+The **unique key** you provide is used internally for refetching, caching, and sharing your queries throughout your application.
 
-`useQuery` 返回的查询结果包含了关于查询的所有信息，你可以用来进行模板化和其他数据使用：
+The query result returned by `useQuery` contains all of the information about the query that you'll need for templating and any other usage of the data:
 
 [//]: # 'Example2'
 
@@ -38,107 +38,108 @@ const result = useQuery({ queryKey: ['todos'], queryFn: fetchTodoList })
 
 [//]: # 'Example2'
 
-`result` 对象包含一些非常重要的状态，你需要注意以提高生产效率。一个查询在任何给定的时刻只能处于以下状态之一：
+The `result` object contains a few very important states you'll need to be aware of to be productive. A query can only be in one of the following states at any given moment:
 
-- `isLoading` 或 `status === 'loading'` - 查询尚无数据
-- `isError` 或 `status === 'error'` - 查询遇到错误
-- `isSuccess` 或 `status === 'success'` - 查询成功，数据可用
+- `isLoading` or `status === 'loading'` - The query has no data yet
+- `isError` or `status === 'error'` - The query encountered an error
+- `isSuccess` or `status === 'success'` - The query was successful and data is available
 
-除了这些主要状态，根据查询的状态，还有更多的信息可用：
+Beyond those primary states, more information is available depending on the state of the query:
 
-- `error` - 如果查询处于 `isError` 状态，错误可以通过 `error` 属性获得。
-- `data` - 如果查询处于 `isSuccess` 状态，数据可以通过 `data` 属性获得。
+- `error` - If the query is in an `isError` state, the error is available via the `error` property.
+- `data` - If the query is in an `isSuccess` state, the data is available via the `data` property.
+- `isFetching` - In any state, if the query is fetching at any time (including background refetching) `isFetching` will be `true`.
 
-对于**大多数**查询来说，通常只需要检查 `isLoading` 状态，然后是 `isError` 状态，最后假设数据可用并渲染成功的状态：
+For **most** queries, it's usually sufficient to check for the `isLoading` state, then the `isError` state, then finally, assume that the data is available and render the successful state:
 
 [//]: # 'Example3'
 
 ```tsx
 function Todos() {
-const { isLoading, isError, data, error } = useQuery({
-queryKey: ['todos'],
-queryFn: fetchTodoList,
-})
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodoList,
+  })
 
-if (isLoading) {
-return <span>Loading...</span>
-}
+  if (isLoading) {
+    return <span>Loading...</span>
+  }
 
-if (isError) {
-return <span>Error: {error.message}</span>
-}
+  if (isError) {
+    return <span>Error: {error.message}</span>
+  }
 
-// 到这一步，我们可以假设 `isSuccess === true`
-return (
-<ul>
-{data.map((todo) => (
-<li key={todo.id}>{todo.title}</li>
-))}
-</ul>
-)
+  // We can assume by this point that `isSuccess === true`
+  return (
+    <ul>
+      {data.map((todo) => (
+        <li key={todo.id}>{todo.title}</li>
+      ))}
+    </ul>
+  )
 }
 ```
 
 [//]: # 'Example3'
 
-如果布尔值不适合你，你也可以始终使用 `status` 状态：
+If booleans aren't your thing, you can always use the `status` state as well:
 
 [//]: # 'Example4'
 
 ```tsx
 function Todos() {
-const { status, data, error } = useQuery({
-queryKey: ['todos'],
-queryFn: fetchTodoList,
-})
+  const { status, data, error } = useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodoList,
+  })
 
-if (status === 'loading') {
-return <span>Loading...</span>
-}
+  if (status === 'loading') {
+    return <span>Loading...</span>
+  }
 
-if (status === 'error') {
-return <span>Error: {error.message}</span>
-}
+  if (status === 'error') {
+    return <span>Error: {error.message}</span>
+  }
 
-// status === 'success' 也是成立的，但是 "else" 逻辑同样适用
-return (
-<ul>
-{data.map((todo) => (
-<li key={todo.id}>{todo.title}</li>
-))}
-</ul>
-)
+  // also status === 'success', but "else" logic works, too
+  return (
+    <ul>
+      {data.map((todo) => (
+        <li key={todo.id}>{todo.title}</li>
+      ))}
+    </ul>
+  )
 }
 ```
 
 [//]: # 'Example4'
 
-如果在访问数据之前已经检查了 `loading` 和 `error`，TypeScript 也会正确缩小 `data` 的类型。
+TypeScript will also narrow the type of `data` correctly if you've checked for `loading` and `error` before accessing it.
 
 ### FetchStatus
 
-除了 `status` 字段，`result` 对象还会附带额外的 `fetchStatus` 属性，有以下选项：
+In addition to the `status` field, the `result` object, you will also get an additional `fetchStatus`property with the following options:
 
-- `fetchStatus === 'fetching'` - 查询当前正在获取数据。
-- `fetchStatus === 'paused'` - 查询想要获取数据，但已被暂停。在[网络模式](../guides/network-mode)指南中详细了解。
-- `fetchStatus === 'idle'` - 查询当前没有任何操作。
+- `fetchStatus === 'fetching'` - The query is currently fetching.
+- `fetchStatus === 'paused'` - The query wanted to fetch, but it is paused. Read more about this in the [Network Mode](../guides/network-mode) guide.
+- `fetchStatus === 'idle'` - The query is not doing anything at the moment.
 
-### 为什么有两种不同的状态？
+### Why two different states?
 
-后台重新获取和过期时同时重新验证的逻辑使得 `status` 和 `fetchStatus` 的所有组合都是可能的。例如：
+Background refetches and stale-while-revalidate logic make all combinations for `status` and `fetchStatus` possible. For example:
 
-- 处于 `success` 状态的查询通常会处于 `idle` 的 `fetchStatus`，但如果正在进行后台重新获取，它也可能处于 `fetching` 状态。
-- 如果查询挂载并且没有数据，通常会处于 `loading` 状态和 `fetching` 的 `fetchStatus`，但如果没有网络连接，它也可能是 `paused`。
+- a query in `success` status will usually be in `idle` fetchStatus, but it could also be in `fetching` if a background refetch is happening.
+- a query that mounts and has no data will usually be in `loading` status and `fetching` fetchStatus, but it could also be `paused` if there is no network connection.
 
-因此，请记住，查询可以处于 `loading` 状态而实际上并不获取数据。作为一个经验法则：
+So keep in mind that a query can be in `loading` state without actually fetching data. As a rule of thumb:
 
-- `status` 提供有关 `data` 的信息：我们是否有任何数据？
-- `fetchStatus` 提供有关 `queryFn` 的信息：它是否正在运行？
+- The `status` gives information about the `data`: Do we have any or not?
+- The `fetchStatus` gives information about the `queryFn`: Is it running or not?
 
 [//]: # 'Materials'
 
-## 进一步阅读
+## Further Reading
 
-如果你想了解一个执行状态检查的替代方法，请查看[社区资源](../community/tkdodos-blog#4-status-checks-in-react-query)。
+For an alternative way of performing status checks, have a look at the [Community Resources](../community/tkdodos-blog#4-status-checks-in-react-query).
 
 [//]: # 'Materials'
